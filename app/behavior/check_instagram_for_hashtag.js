@@ -24,7 +24,7 @@ module.exports = function(config, abilities) {
   }
 
 	function _getDistanceMi(post) {
-     return abilities.phonetracker.calcDistMi(config.phonetracker.location.lat, config.phonetracker.location.lng, post.location.lat, post.location.lng);
+     return abilities.phonetracker.calcDistMi(config.phonetracker.location.lat, config.phonetracker.location.lng, post.location.lat, post.location.lng).toPrecision(2);
 	}
 
 
@@ -39,6 +39,13 @@ module.exports = function(config, abilities) {
   }
 
 
+	function send_success_message(post) {
+		console.log("WE FOUND ONE");
+		var message = `NEW NEARBY POST ${_getDistanceMi(post)} mi away: ${post.url}`
+		abilities.slack.send_message(message, function(error, res, body) {
+	//		console.log(error, body, res.statusCode);
+		});
+	}
 
   var hashtags = ["abolishice", "resistice"]
 
@@ -51,9 +58,8 @@ module.exports = function(config, abilities) {
   			if_post_not_in_db(np, function(post) {
 					// WE FOUND ONE
 					save_post_to_db(post, function(newdoc) {
-						console.log("WE FOUND ONE");
-      			var message = `NEW NEARBY POST ${_getDistanceMi(post)} mi away: ${post.url}`
-						console.log(message);
+
+						send_success_message(post);
 
 					});
 				});
