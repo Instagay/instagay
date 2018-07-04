@@ -1,6 +1,6 @@
 var request = require("request");
 
-class instagram.js {
+class instagram {
 
 
   constructor(config) {
@@ -17,5 +17,5 @@ class instagram.js {
 
 }
 
-module.exports = instagram.js;
+module.exports = instagram;
 

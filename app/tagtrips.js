@@ -1,42 +1,27 @@
 var config = require('./config/config');
 
-
-console.log("=== ADDING ABILITIES");
+console.log("+++++++++++ ABILITIES");
 var abilities = {};
 
-console.log("= connect to SLACK");
+console.log("+adding+ slack");
 abilities.slack = new (require('./abilities/slack'))(config);
 
-console.log("= connect to WEBSERVER");
+console.log("+adding+ webserver");
 abilities.webserver = new (require('./abilities/webserver'))(config);
 
-console.log("= connect to ARPSCAN");
-abilities.arpscan = new (require('./abilities/arpscan'))(config);
+console.log("+adding+ phonetracker");
+abilities.phonetracker = new (require('./abilities/phonetracker'))(config);
 
-console.log("= connect to ambientweather");
-abilities.ambientweather = new (require('./abilities/ambientweather'))(config);
-
-console.log("= connect to coolmasternet");
-abilities.coolmasternet = new (require('./abilities/coolmasternet'))(config);
+console.log("+adding+ instagram");
+abilities.instagram = new (require('./abilities/instagram'))(config);
 
 
-console.log("=== ADDING BEHAVIORS");
+console.log("+++++++++++ BEHAVIORS");
 
-console.log("= adding banter - general slack convo");
-(require('./behavior/banter'))(config, abilities);
-
-/*
-console.log("= adding zwave - controlling zwave nodes with Slack messages");
-(require('./behavior/zwave'))(config, abilities);
-
-console.log("= adding webroutes - adding routes to the express server");
+console.log("+adding+ webroutes");
 (require('./behavior/webroutes'))(config, abilities);
 
-console.log("= adding qrswitches - the ability to use scanned QR codes/urls to activate light switches");
-(require('./behavior/qrswitches'))(config, abilities); */
-
-(require('./behavior/ask_about_the_weather'))(config, abilities);
-
-(require('./behavior/slack_control_coolmasternet'))(config, abilities);
+console.log("+adding+ check_instagram_for_hashtag");
+(require('./behavior/check_instagram_for_hashtag'))(config, abilities);
 
 console.log("= RUNNING!");

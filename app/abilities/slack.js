@@ -1,8 +1,11 @@
+const request = require('request');
+
 class slack {
 
   constructor(config) {
+    this.config = config;
    // CONNECT SLACK
-    var Botkit = require('botkit');
+/*    var Botkit = require('botkit');
 
     this.controller = Botkit.slackbot();
     this.bot = this.controller.spawn({
@@ -18,7 +21,7 @@ class slack {
       self.start_rtm();
 		});
 
-    this.start_rtm();
+    this.start_rtm();*/
   }
 
 	start_rtm() {
@@ -31,6 +34,22 @@ class slack {
 			console.log("RTM started!");
 		});
 	}
+
+  send_message(text, cb) {
+		var self = this;
+    var payload = {
+          "text": text,
+          "username": self.config.slack.username,
+          "icon_emoji": self.config.slack.icon_emoji
+    };
+    request.post({
+        headers : { 'Content-type' : 'application/json' },
+        url: self.config.slack.webhook_url,
+        form : {
+          payload: JSON.stringify(payload)
+        }
+      }, cb);
+  }
 
 }
 
