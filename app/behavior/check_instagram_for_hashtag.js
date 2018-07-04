@@ -1,14 +1,12 @@
-function degToCompass(num) {
-    var val = Math.floor((num / 22.5) + 0.5);
-    var arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
-    return arr[(val % 16)];
-}
 
 module.exports = function(config, abilities) { 
 
-  abilities.slack.send_message("test", function(error, res, body) {
-    console.log(error, body, res.statusCode);
+  abilities.instagram.get_geoposts_by_hashtag("abolishice", function(posts) {
+    console.log(posts);
   });
+  //abilities.slack.send_message("test", function(error, res, body) {
+    //console.log(error, body, res.statusCode);
+  //});
 
 }
 

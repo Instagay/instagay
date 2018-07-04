@@ -19,9 +19,11 @@ abilities.instagram = new (require('./abilities/instagram'))(config);
 console.log("+++++++++++ BEHAVIORS");
 
 console.log("+adding+ webroutes");
-(require('./behavior/webroutes'))(config, abilities);
+new (require('./behavior/webroutes'))(config, abilities);
 
 console.log("+adding+ check_instagram_for_hashtag");
-(require('./behavior/check_instagram_for_hashtag'))(config, abilities);
+new (require('./behavior/check_instagram_for_hashtag'))(config, abilities);
 
 console.log("= RUNNING!");
+
+
