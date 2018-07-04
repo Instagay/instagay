@@ -2,6 +2,8 @@ var config = {};
 
 config.slack = {};
 config.slack.webhook_url = "https://hooks.slack.com/services/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+config.slack.username = "robot";
+config.slack.icon_emoji = ":robot_face:";
 
 config.phonetracker = {};
 
@@ -9,6 +11,10 @@ config.webserver = {};
 config.webserver.port = 3000;
 
 config.instagram = {};
+
+config.nedb = {};
+config.nedb.igposts = {};
+config.nedb.igposts.path = 'data/igposts.db';
 
 
 module.exports = config;

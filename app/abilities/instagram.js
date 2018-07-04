@@ -31,19 +31,25 @@ class instagram {
       return simplepost;
    }
 
-  get_geoposts_by_hashtag(hashtag, cb) {
+  get_geoposts_by_hashtag(hashtag) {
     var self = this;
 
-    var posts = [];
+    return new Promise(function(resolve, reject) {
 
-    ig.deepScrapeTagPage(hashtag).then(function(result){
-      for(let thispost of result.media) {
-        if(thispost.location && thispost.location.id) {
-          posts.push(self._post_to_simplepost(thispost));
+      var posts = [];
+
+      ig.deepScrapeTagPage(hashtag).then(function(result){
+        for(let thispost of result.media) {
+          if(thispost.location && thispost.location.id) {
+            posts.push(self._post_to_simplepost(thispost));
+          }
         }
-      }
-      cb(posts);
-    })
+        resolve(posts);
+      }, function(reason) {
+        reject(reason)
+      });
+
+    });
 
   }
 
