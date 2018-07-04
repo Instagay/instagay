@@ -15,6 +15,9 @@ abilities.phonetracker = new (require('./abilities/phonetracker'))(config);
 console.log("+adding+ instagram");
 abilities.instagram = new (require('./abilities/instagram'))(config);
 
+console.log("+adding+ nedb");
+abilities.nedb = new (require('./abilities/nedb'))(config);
+
 
 console.log("+++++++++++ BEHAVIORS");
 
