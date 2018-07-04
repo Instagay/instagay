@@ -16,25 +16,48 @@ class instagram {
     });
   }
 
+  _post_to_simplepost(post) {
+      var simplepost = {};
+      simplepost.id = post.id
+      simplepost.display_url = post.display_url
+      simplepost.location = {};
+      simplepost.location.id = post.location.id
+      simplepost.location.name = post.location.name
+      simplepost.location.lat = post.location.lat
+      simplepost.location.lng = post.location.lng
+      simplepost.shortcode = post.shortcode
+      simplepost.url = "https://www.instagram.com/p/" + post.shortcode;
+      simplepost.username = post.owner.username
+      return simplepost;
+   }
+
   get_geoposts_by_hashtag(hashtag, cb) {
+    var self = this;
 
     var posts = [];
 
     ig.deepScrapeTagPage(hashtag).then(function(result){
       for(let thispost of result.media) {
         if(thispost.location && thispost.location.id) {
-          var simplepost = {};
-          simplepost.id = thispost.id
-          simplepost.display_url = thispost.display_url
-          simplepost.location = {};
-          simplepost.location.id = thispost.location.id
-          simplepost.location.name = thispost.location.name
-          simplepost.location.lat = thispost.location.lat
-          simplepost.location.lng = thispost.location.lng
-          simplepost.shortcode = thispost.shortcode
-          simplepost.url = "https://www.instagram.com/p/" + thispost.shortcode;
-          simplepost.username = thispost.owner.username
-          posts.push(simplepost);
+          posts.push(self._post_to_simplepost(thispost));
+        }
+      }
+      cb(posts);
+    })
+
+  }
+
+
+  get_geoposts_by_hashtags (hashtags, cb) {
+    var self = this;
+
+    Promise.all(hashtags.map(ig.deepScrapeTagPage)).then(function(results) {
+      var posts = [];
+      for(let result of results) {
+        for(let thispost of result.media) {
+          if(thispost.location && thispost.location.id) {
+            posts.push(self._post_to_simplepost(thispost));
+          }
         }
       }
       cb(posts);
