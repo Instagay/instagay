@@ -76,7 +76,7 @@ class instagram {
     request(postURL, function(err, response, body) {
       var data = JSON.parse(body);
 			if("status" in data && data.status === 'fail') {
-				console.log("TOO FAST, GOTTA WAIT");
+				console.log(data.message);
 				return;
 			} else {
 				var locationinfo = data.graphql.location;

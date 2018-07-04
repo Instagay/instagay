@@ -54,10 +54,11 @@ module.exports = function(config, abilities) {
 
 			if_post_not_in_db(post, function(newpost) {
 
+				var simplepost = abilities.instagram._post_to_simplepost(newpost);
+
 				// WE FOUND ONE !!!
-				save_post_to_db(newpost, function(newdoc) {
-					console.log(newpost);
-					send_success_message(newpost);
+				save_post_to_db(simplepost, function(newdoc) {
+					send_success_message(simplepost);
 				});
 
 			});
