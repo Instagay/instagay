@@ -44,6 +44,7 @@ class instagram {
             posts.push(self._post_to_simplepost(thispost));
           }
         }
+        console.log("== we got posts by hashtag");
         resolve(posts);
       }, function(reason) {
         reject(reason)
