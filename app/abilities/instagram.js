@@ -52,15 +52,56 @@ class instagram {
 
 
 
-  scrapeTagPage(hashtag) {
+  scrapeTagPage(hashtag, cb) {
     var postURL = `https://www.instagram.com/explore/tags/${hashtag}/?__a=1`
-    request(postURL, function(err, response, body){
+    request(postURL, function(err, response, body) {
       var data = JSON.parse(body);
       var posts = data.graphql.hashtag.edge_hashtag_to_media.edges.map(e => e.node)
-      console.log(posts);
+			posts.forEach(cb)
     });
   }
 
+
+  scrapePostPage(shortcode, cb) {
+    var postURL = `https://www.instagram.com/p/${shortcode}/?__a=1`
+    request(postURL, function(err, response, body) {
+      var data = JSON.parse(body);
+      var postinfo = data.graphql.shortcode_media;
+			cb(postinfo)
+    });
+  }
+
+  scrapeLocationPage(locationid, cb) {
+    var postURL = `https://www.instagram.com/explore/locations/${locationid}/?__a=1`
+    request(postURL, function(err, response, body) {
+      var data = JSON.parse(body);
+			if("status" in data && data.status === 'fail') {
+				console.log("TOO FAST, GOTTA WAIT");
+				return;
+			} else {
+				var locationinfo = data.graphql.location;
+				cb(locationinfo)
+			}
+		});
+  }
+
+	deepScrapeOnlyTagsWithLocations(hashtag, cb) {
+
+		var self = this;	 	
+
+		self.scrapeTagPage(hashtag, function(post) {
+			self.scrapePostPage(post.shortcode, function(postdetail) {
+				if("location" in postdetail && postdetail.location !== null) {
+					self.scrapeLocationPage(postdetail.location.id, function(locationinfo) {
+						var fullpost = Object.assign(post, postdetail);
+						fullpost.location = locationinfo;
+						cb(fullpost);
+					});
+				}
+			});
+		});
+
+	}
 
 
 }

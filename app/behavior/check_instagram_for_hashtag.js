@@ -48,21 +48,38 @@ module.exports = function(config, abilities) {
 
   var hashtags = ["abolishice", "resistice"]
 
+  abilities.instagram.deepScrapeOnlyTagsWithLocations("abolishice", function(post) {
 
-  abilities.instagram.get_geoposts_by_hashtag("abolishice")
-    .then(posts => {
-      var nearby_posts = posts.filter(is_post_nearby)
-      nearby_posts.forEach(function(np) {
-  			if_post_not_in_db(np, function(post) {
-					// WE FOUND ONE
-					save_post_to_db(post, function(newdoc) {
+		if(is_post_nearby(post)) {
 
-						send_success_message(post);
+			if_post_not_in_db(post, function(newpost) {
 
-					});
+				// WE FOUND ONE !!!
+				save_post_to_db(newpost, function(newdoc) {
+					console.log(newpost);
+					send_success_message(newpost);
 				});
+
 			});
-    })
+
+		}
+
+	});
+
+  //abilities.instagram.get_geoposts_by_hashtag("abolishice")
+    //.then(posts => {
+      //var nearby_posts = posts.filter(is_post_nearby)
+      //nearby_posts.forEach(function(np) {
+        //if_post_not_in_db(np, function(post) {
+					//// WE FOUND ONE
+					//save_post_to_db(post, function(newdoc) {
+
+						//send_success_message(post);
+
+					//});
+				//});
+			//});
+    //})
 
 }
 
