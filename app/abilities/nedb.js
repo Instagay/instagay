@@ -10,7 +10,7 @@ class nedb {
     this.db.igposts.ensureIndex({ fieldName: 'id', unique: true  })
   }
 
-
+}
 
 module.exports = nedb;
 

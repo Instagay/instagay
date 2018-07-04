@@ -1,18 +1,32 @@
 
 module.exports = function(config, abilities) { 
 
+  function return_post_if_new_and_insert_in_db(post) {
+    return new Promise(function(resolve, reject) {
+        abilities.nedb.db.igposts.find({ id: post.id }).then(function(docs) {
+          if(docs.length == 0) {
+            abilities.nedb.db.igposts.insert(post)
+              .then(function(err) {
+                console.log(err);
+              });
+            resolve(post); 
+          } else { 
+            resolve({});
+          }
+        }, function(reason) { reject(reason) });
+    });
+  }
+
+
 
   function filter_for_new_posts(posts) {
     return new Promise(function(resolve, reject) {
 
-      for (let p of posts) {
-        abilities.nedb.db.igposts.find({ id: p.id })
-          .then( function (docs) {
-            console.log(docs);
-          });
-      }
+      Promise.all(posts.map(return_post_if_new_and_insert_in_db))
+        .then(function(filtered_posts) {
+          console.log(filtered_posts);
+        });
 
-      resolve("yay");
     });
   }
 
