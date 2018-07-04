@@ -1,0 +1,14 @@
+var config = {};
+
+config.slack = {};
+config.slack.webhook_url = "https://hooks.slack.com/services/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+
+config.phonetracker = {};
+
+config.webserver = {};
+config.webserver.port = 3000;
+
+config.instagram = {};
+
+
+module.exports = config;
