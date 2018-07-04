@@ -1,15 +1,13 @@
 
-var Datastore = require('nedb')
+const Datastore = require('nedb-promises')
 
 class nedb {
 
   constructor(config) {
     this.config = config;
     this.db = {};
-    this.db.igposts = new Datastore({ filename: config.nedb.igposts.path, autoload: true });
-    this.db.igposts.ensureIndex({ fieldName: 'id', unique: true  }, function (err) {
-      if(err) { console.log(err); }
-    });
+    this.db.igposts = Datastore.create(config.nedb.igposts.path)
+    this.db.igposts.ensureIndex({ fieldName: 'id', unique: true  })
   }
 
   findAsync(dbname, query) {

@@ -6,7 +6,7 @@ module.exports = function(config, abilities) {
     return new Promise(function(resolve, reject) {
 
       for (let p of posts) {
-        abilities.nedb.findAsync("igposts", { id: p.id })
+        abilities.nedb.db.igposts.find({ id: p.id })
           .then( function (docs) {
             console.log(docs);
           });
