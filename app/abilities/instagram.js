@@ -34,7 +34,7 @@ class instagram {
   get_geoposts_by_hashtag(hashtag) {
     var self = this;
 
-    return new Promise(function(resolve, reject) {
+    return new Promise( function(resolve, reject) {
 
       var posts = [];
 
