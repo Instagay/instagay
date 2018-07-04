@@ -12,5 +12,5 @@ class database {
 
 }
 
-moduke.exports = database ;
+module.exports = database ;
 
