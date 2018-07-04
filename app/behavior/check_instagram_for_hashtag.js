@@ -1,6 +1,15 @@
 
 module.exports = function(config, abilities) { 
 
+  function is_post_nearby (post) {
+      if(Object.keys(post).length == 0) { return false } //if post is empty, return empty
+
+      if(_getDistanceMi(post) < config.phonetracker.milesRadius) {
+        return true;
+      } else {
+        return false;
+      }
+  }
 
   function if_post_not_in_db(post, cb) {
 			if(Object.keys(post).length == 0) { return; } //if post is empty, return empty
@@ -28,16 +37,6 @@ module.exports = function(config, abilities) {
 	}
 
 
-  function is_post_nearby (post) {
-      if(Object.keys(post).length == 0) { return false } //if post is empty, return empty
-
-      if(_getDistanceMi(post) < config.phonetracker.milesRadius) {
-        return true;
-      } else {
-        return false;
-      }
-  }
-
 
 	function send_success_message(post) {
 		console.log("WE FOUND ONE");
@@ -49,7 +48,6 @@ module.exports = function(config, abilities) {
 
   var hashtags = ["abolishice", "resistice"]
 
-//  abilities.instagram.scrapeTagPage("abolishice")
 
   abilities.instagram.get_geoposts_by_hashtag("abolishice")
     .then(posts => {
@@ -65,39 +63,6 @@ module.exports = function(config, abilities) {
 				});
 			});
     })
-
-
-  //abilities.instagram.get_geoposts_by_hashtag("abolishice")
-
-    //.then(posts => filter_posts(posts, return_post_if_nearby))
-
-    //.then(posts => filter_posts(posts, return_post_if_new))
-
-    //.then(function(posts) {
-      //console.log(posts);
-    //});
-  
-    ////.then(posts => posts.map(function(post) {
-
-      //console.log("========THIS POST IS NEW AND NEARBY");
-      //console.log(post);
-      //save_post_to_db(post);
-
-      //var midist = abilities.phonetracker.calcDistMi(config.phonetracker.lat, config.phonetracker.lng, post.location.lat, post.location.lng);
-
-      //var message = "NEW NEARBY POST " + midist + " mi away: " + post.url;
-      //abilities.slack.send_message(message, function(error, res, body) {
-        //console.log(error, body, res.statusCode);
-      //});
-
-
-    //}));
-  //abilities.instagram.get_geoposts_by_hashtag(hashtags, function(posts) {
-    //console.log(posts);
-  //});
-  //abilities.slack.send_message("test", function(error, res, body) {
-    //console.log(error, body, res.statusCode);
-  //});
 
 }
 

@@ -10,11 +10,6 @@ class instagram {
     this.apiurl = "";
   }
 
-  get_posts_by_weather_slow(cb) {
-    request(this.apiurl, (err, resp, body) => {
-      cb(JSON.parse(body)[0]);
-    });
-  }
 
   _post_to_simplepost(post) {
       var simplepost = {};
@@ -31,6 +26,8 @@ class instagram {
       return simplepost;
    }
 
+
+
   get_geoposts_by_hashtag(hashtag) {
     var self = this;
 
@@ -38,14 +35,12 @@ class instagram {
 
       var posts = [];
 
-
       ig.deepScrapeTagPage(hashtag).then(function(result){
         for(let thispost of result.media) {
           if(thispost.location && thispost.location.id) {
             posts.push(self._post_to_simplepost(thispost));
           }
         }
-        console.log("== we got posts by hashtag");
         resolve(posts);
       }, function(reason) {
         reject(reason)
@@ -55,22 +50,6 @@ class instagram {
 
   }
 
-  get_geoposts_by_hashtags (hashtags, cb) {
-    var self = this;
-
-    Promise.all(hashtags.map(ig.deepScrapeTagPage)).then(function(results) {
-      var posts = [];
-      for(let result of results) {
-        for(let thispost of result.media) {
-          if(thispost.location && thispost.location.id) {
-            posts.push(self._post_to_simplepost(thispost));
-          }
-        }
-      }
-      cb(posts);
-    })
-
-  }
 
 
   scrapeTagPage(hashtag) {
