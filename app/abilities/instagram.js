@@ -38,6 +38,7 @@ class instagram {
 
       var posts = [];
 
+
       ig.deepScrapeTagPage(hashtag).then(function(result){
         for(let thispost of result.media) {
           if(thispost.location && thispost.location.id) {
@@ -54,7 +55,6 @@ class instagram {
 
   }
 
-
   get_geoposts_by_hashtags (hashtags, cb) {
     var self = this;
 
@@ -70,6 +70,16 @@ class instagram {
       cb(posts);
     })
 
+  }
+
+
+  scrapeTagPage(hashtag) {
+    var postURL = `https://www.instagram.com/explore/tags/${hashtag}/?__a=1`
+    request(postURL, function(err, response, body){
+      var data = JSON.parse(body);
+      var posts = data.graphql.hashtag.edge_hashtag_to_media.edges.map(e => e.node)
+      console.log(posts);
+    });
   }
 
 
