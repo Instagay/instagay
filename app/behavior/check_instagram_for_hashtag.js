@@ -3,9 +3,9 @@ module.exports = function(config, abilities) {
 
   function return_post_if_new_and_insert_in_db(post) {
     return new Promise(function(resolve, reject) {
-        abilities.nedb.db.igposts.find({ id: post.id }).then(function(docs) {
+        abilities.database.db.igposts.find({ id: post.id }).then(function(docs) {
           if(docs.length == 0) {
-            abilities.nedb.db.igposts.insert(post)
+            abilities.database.db.igposts.insert(post)
               .then(function(err) {
                 console.log(err);
               });
@@ -23,7 +23,8 @@ module.exports = function(config, abilities) {
     return new Promise(function(resolve, reject) {
 
       Promise.all(posts.map(return_post_if_new_and_insert_in_db))
-        .then(function(filtered_posts) {
+        .then(function(result) {
+          var filtered_posts = result.filter(fp => Object.keys(fp).length != 0)
           console.log(filtered_posts);
         });
 
