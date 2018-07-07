@@ -95,20 +95,24 @@ module.exports = function(config, abilities) {
   }
 
 
-  thishashtagqueue = new hashtagqueue(["abolishice", "resistice"])
 
 
-  var interval = setInterval(function() {
+  function run() {
 
-    oldest_tag = thishashtagqueue.get_oldest_hashtag()
+    thishashtagqueue = new hashtagqueue(["abolishice", "resistice"])
 
-    console.log("####### CHECKING #" + oldest_tag);
+    var interval = setInterval(function() {
+      oldest_tag = thishashtagqueue.get_oldest_hashtag()
+      console.log("####### CHECKING #" + oldest_tag);
+      // scrape the oldest tag
+      scrapeTagAndProcess(oldest_tag)
+    }, config.instagram.checking_interval);
 
-    // scrape the oldest tag
-    scrapeTagAndProcess(oldest_tag)
+  }
 
-  }, config.instagram.checking_interval);
 
+
+  run();
 
 
 
