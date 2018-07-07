@@ -103,8 +103,25 @@ class instagram {
 
 	}
 
+	scrapePostAndLocations(shortcode, cb) {
+
+		var self = this;	 	
+
+    self.scrapePostPage(post.shortcode, function(postdetail) {
+      if("location" in postdetail && postdetail.location !== null) {
+        self.scrapeLocationPage(postdetail.location.id, function(locationinfo) {
+          var fullpost = Object.assign(post, postdetail);
+          fullpost.location = locationinfo;
+          cb(fullpost);
+        });
+      }
+    });
+
+	}
+
 
 }
+
 
 module.exports = instagram;
 

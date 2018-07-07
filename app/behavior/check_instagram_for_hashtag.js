@@ -4,7 +4,8 @@ module.exports = function(config, abilities) {
   function is_post_nearby (post) {
       if(Object.keys(post).length == 0) { return false } //if post is empty, return empty
 
-      if(_getDistanceMi(post) < config.phonetracker.milesRadius) {
+      var dfp = abilities.phonetracker.getDistanceFromPhone(post.location.lat, post.location.lng)
+      if(dfp < config.phonetracker.milesRadius) {
         return true;
       } else {
         return false;
@@ -32,55 +33,45 @@ module.exports = function(config, abilities) {
 			});
   }
 
-	function _getDistanceMi(post) {
-     return abilities.phonetracker.calcDistMi(config.phonetracker.location.lat, config.phonetracker.location.lng, post.location.lat, post.location.lng).toPrecision(2);
-	}
-
-
-
 	function send_success_message(post) {
 		console.log("WE FOUND ONE");
-		var message = `NEW NEARBY POST ${_getDistanceMi(post)} mi away: ${post.url}`
+    var dfp = abilities.phonetracker.getDistanceFromPhone(post.location.lat, post.location.lng)
+		var message = `NEW NEARBY POST ${dfp} mi away: ${post.url}`
 		abilities.slack.send_message(message, function(error, res, body) {
 	//		console.log(error, body, res.statusCode);
 		});
 	}
 
+
+
+
+  function scrapeTagAndProcess(hashtag) {
+
+    abilities.instagram.deepScrapeOnlyTagsWithLocations(hashtag, function(post) {
+
+      if(is_post_nearby(post)) {
+
+        if_post_not_in_db(post, function(newpost) {
+
+          var simplepost = abilities.instagram._post_to_simplepost(newpost);
+
+          // WE FOUND ONE !!!
+          save_post_to_db(simplepost, function(newdoc) {
+            send_success_message(simplepost);
+          });
+
+        });
+
+      }
+
+    });
+  }
+
   var hashtags = ["abolishice", "resistice"]
 
-  abilities.instagram.deepScrapeOnlyTagsWithLocations("abolishice", function(post) {
+  scrapeTagAndProcess("abolishice")
 
-		if(is_post_nearby(post)) {
 
-			if_post_not_in_db(post, function(newpost) {
-
-				var simplepost = abilities.instagram._post_to_simplepost(newpost);
-
-				// WE FOUND ONE !!!
-				save_post_to_db(simplepost, function(newdoc) {
-					send_success_message(simplepost);
-				});
-
-			});
-
-		}
-
-	});
-
-  //abilities.instagram.get_geoposts_by_hashtag("abolishice")
-    //.then(posts => {
-      //var nearby_posts = posts.filter(is_post_nearby)
-      //nearby_posts.forEach(function(np) {
-        //if_post_not_in_db(np, function(post) {
-					//// WE FOUND ONE
-					//save_post_to_db(post, function(newdoc) {
-
-						//send_success_message(post);
-
-					//});
-				//});
-			//});
-    //})
 
 }
 

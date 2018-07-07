@@ -5,6 +5,10 @@ class phonetracker {
   constructor(config) {
     this.config = config;
     this.apiurl = "";
+
+    this.location = {};
+    this.location.lat = 40.716920;
+    this.location.lng = -73.949027;
   }
 
   get_weather_slow(cb) {
@@ -35,6 +39,12 @@ class phonetracker {
     var d = R * c;
     return d;
   }
+
+	getDistanceFromPhone(lat, lng) {
+    var self = this;
+    return self.calcDistMi(self.location.lat, self.location.lng, lat, lng).toPrecision(2);
+	}
+
 
 
 
