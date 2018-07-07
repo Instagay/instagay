@@ -55,9 +55,15 @@ class instagram {
   scrapeTagPage(hashtag, cb) {
     var postURL = `https://www.instagram.com/explore/tags/${hashtag}/?__a=1`
     request(postURL, function(err, response, body) {
-      var data = JSON.parse(body);
-      var posts = data.graphql.hashtag.edge_hashtag_to_media.edges.map(e => e.node)
-			posts.forEach(cb)
+      try {
+        var data = JSON.parse(body);
+        var posts = data.graphql.hashtag.edge_hashtag_to_media.edges.map(e => e.node)
+        posts.forEach(cb)
+      } catch(e) {
+        console.log(e);
+        console.log(response);
+        console.log(body);
+      }
     });
   }
 
@@ -74,14 +80,26 @@ class instagram {
   scrapeLocationPage(locationid, cb) {
     var postURL = `https://www.instagram.com/explore/locations/${locationid}/?__a=1`
     request(postURL, function(err, response, body) {
-      var data = JSON.parse(body);
-			if("status" in data && data.status === 'fail') {
-				console.log(data.message);
-				return;
-			} else {
-				var locationinfo = data.graphql.location;
-				cb(locationinfo)
-			}
+
+      try {
+
+        var data = JSON.parse(body);
+        if("status" in data && data.status === 'fail') {
+          console.log(data.message);
+          return;
+        } else {
+          var locationinfo = data.graphql.location;
+          cb(locationinfo)
+        }
+
+      } catch(e) {
+        console.log(e);
+        console.log(err);
+        console.log(response);
+        console.log(body);
+      }
+
+
 		});
   }
 
