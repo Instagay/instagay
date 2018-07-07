@@ -78,7 +78,8 @@ module.exports = function(config, abilities) {
 
   class hashtagqueue {
     constructor(hashtags) {
-      this.hashtags = hashtags
+      this.hashtags = _.shuffle(hashtags)
+      // the shuffle is done so that, if the program crashes regularly for some reason, all of the hashtags have an even chance at being checked for the first time
       this.hashtagrecords = [] 
       var self = this;
       for (let h of hashtags) {
