@@ -97,7 +97,7 @@ module.exports = function(config, abilities) {
 
 
 
-  function run() {
+  function run_behavior() {
 
     thishashtagqueue = new hashtagqueue(["abolishice", "resistice"])
 
@@ -112,7 +112,7 @@ module.exports = function(config, abilities) {
 
 
 
-  run();
+  run_behavior();
 
 
 
