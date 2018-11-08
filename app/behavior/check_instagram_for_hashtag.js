@@ -94,25 +94,49 @@ module.exports = function(config, abilities) {
     }
   }
 
+  function get_phone_location(cb) {
+    abilities.database.db.owntracks.find({}).sort(['tst', 'desc']).limit(1).toArray().then(function(d) {
+      cb(d[0]);
+    });
+  }
+
+  function update_phone_location(cb) {
+    get_phone_location(function(d) {
+      console.log("updating our phone location to " + d.lat + ", " + d.lon);
+      abilities.phonetracker.set_location(d.lat, d.lon);
+      if ( typeof cb !== 'undefined' && cb) {
+        cb();
+      }
+    });
+  }
+
+
+  var tags = ["instagay", "gay", "gayboy", "gaypride", "queer", "gayguy", "gayman", "gaylife", "bisexual ", "gaylove", "scruffy", "transgender", "gayrab", "LGBT", "LGBTQ", "LGBTQI", "LGBTQIA", "lesbian", "gay", "bi", "pan", "pansexual", "trans", "transman", "FTM", "bornthisway", "bornperfect", "loveislove", "lovewins", "transwoman", "MTF", "Pride", "PrideMonth", "gayrights", "transrights", "lgbtyouth", "queeryouth", "itgetsbetter", "gaygirl", "tomboy", "genderfluid", "homosexual ", "gayisok", "girlswhokissgirls", "girlswholikegirls ", "samelove", "gaygirls", "dyke", "TransIsBeautiful", "TransIsHandsome", "TransIsWonderful", "ProudTransman", "proudtranswoman"]
 
 
 
   function run_behavior() {
 
-    thishashtagqueue = new hashtagqueue(["abolishice", "resistice"])
+    thishashtagqueue = new hashtagqueue(tags)
 
-    var interval = setInterval(function() {
+    var loop = function() {
       oldest_tag = thishashtagqueue.get_oldest_hashtag()
       console.log("####### CHECKING #" + oldest_tag);
       // scrape the oldest tag
       scrapeTagAndProcess(oldest_tag)
-    }, config.instagram.checking_interval);
+      update_phone_location();
+    }
+     
+    loop();
+    var interval = setInterval(loop, config.instagram.checking_interval);
 
   }
 
 
 
-  run_behavior();
+  update_phone_location(function() {
+    run_behavior();
+  });
 
 
 

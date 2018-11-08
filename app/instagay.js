@@ -3,6 +3,7 @@ var config = require('./config/config');
 console.log("+++++++++++ ABILITIES");
 var abilities = {};
 
+
 console.log("+adding+ slack");
 abilities.slack = new (require('./abilities/slack'))(config);
 
@@ -19,14 +20,25 @@ console.log("+adding+ database");
 abilities.database = new (require('./abilities/database'))(config);
 
 
-console.log("+++++++++++ BEHAVIORS");
 
-console.log("+adding+ webroutes");
-new (require('./behavior/webroutes'))(config, abilities);
+function add_behaviors() {
 
-console.log("+adding+ check_instagram_for_hashtag");
-new (require('./behavior/check_instagram_for_hashtag'))(config, abilities);
+  console.log("+++++++++++ BEHAVIORS");
+
+  console.log("+adding+ owntracks_http_server");
+  new (require('./behavior/owntracks_http_server'))(config, abilities);
+
+  console.log("+adding+ check_instagram_for_hashtag");
+  new (require('./behavior/check_instagram_for_hashtag'))(config, abilities);
+
+}
+
+// this is messy.. TODO wrap all inits into single function
+abilities.database.init().then(() => {
+  add_behaviors()
+})
 
 console.log("= RUNNING!");
 
+abilities.slack.send_message("INSTAGAY is up and running");
 

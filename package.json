@@ -1,28 +1,30 @@
 {
-  "name": "tagtrips",
+  "name": "instagay",
   "version": "1.0.0",
   "description": "",
-  "main": "tagtrips.js",
+  "main": "instagay.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app/tagtrips.js"
+    "start": "node app/instagay.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dantaeyoung/tagtrips.git"
+    "url": "git+https://github.com/dantaeyoung/instagay.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dantaeyoung/tagtrips/issues"
+    "url": "https://github.com/dantaeyoung/instagay/issues"
   },
-  "homepage": "https://github.com/dantaeyoung/tagtrips#readme",
+  "homepage": "https://github.com/dantaeyoung/instagay#readme",
   "dependencies": {
     "botkit": "^0.6.7",
     "instagram-scraping": "^1.0.2",
     "instagram-tagscrape": "git+ssh://git@github.com/dantaeyoung/instagram-tagscrape.git",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
+    "mongodb": "^3.1.9",
+    "mongoose": "^5.3.10",
     "nedb": "^1.8.0",
     "nedb-promises": "^3.0.0",
     "request": "^2.87.0"

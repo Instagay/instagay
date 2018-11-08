@@ -7,8 +7,13 @@ class phonetracker {
     this.apiurl = "";
 
     this.location = {};
-    this.location.lat = 40.716920;
+    this.location.lat = 40.716920; // default to nyc
     this.location.lng = -73.949027;
+  }
+
+  set_location(lat, lng) {
+    this.location.lat = lat;
+    this.location.lng = lng;
   }
 
   get_weather_slow(cb) {
@@ -44,10 +49,6 @@ class phonetracker {
     var self = this;
     return self.calcDistMi(self.location.lat, self.location.lng, lat, lng).toPrecision(2);
 	}
-
-
-
-
 
 }
 

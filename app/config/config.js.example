@@ -6,15 +6,19 @@ config.slack.username = "robot";
 config.slack.icon_emoji = ":robot_face:";
 
 config.phonetracker = {};
+config.phonetracker.milesRadius = 50;
 
 config.webserver = {};
 config.webserver.port = 3000;
 
 config.instagram = {};
+config.instagram.checking_interval = 120000;
 
 config.database = {};
 config.database.igposts = {};
 config.database.igposts.path = 'data/igposts.db';
+config.database.owntracks = {};
+config.database.owntracks.path = 'data/owntracks.db';
 
 
 module.exports = config;
