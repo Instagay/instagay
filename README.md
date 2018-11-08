@@ -13,7 +13,7 @@ Server-side: `https://github.com/LINKIWI/orion-docker`
 MAPBOX_API_TOKEN=<your Mapbox API token>
 PORT=9999
 ```
-- `sudo docker-compose up -build -d `
+- `sudo docker-compose up -d `
 - Things should be working at port `9999`
 
 Adding HTTP basic authentication:
