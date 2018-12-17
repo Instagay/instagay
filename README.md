@@ -6,19 +6,18 @@
 - The server runs a MongoDB server.
 - The server app runs an HTTP server that receives locations from OwnTracks and logs them. No need for MQTT!
 - The server app periodically checks Instagram for new photos with the given hashtags. 
-  - It finds photos with geolocations, and retreives the most recent logged location.
+  - It retrieves the most recent logged phone location.
+  - It filters for only the photos with geolocations.
   - If a photo is within X miles of the location, then it sends a Slack message!
-  - Photos that have already been found are logged in the DB so we don't check their location; this reduces the number of Instagram calls we can have.
-
+  - Photos that have already been looked at are logged in the DB so we don't check their location; this reduces the number of Instagram calls we can do.
+  
 
 ### Setup
 
 Client-side: Owntracks on iOS / Android
-Server-side: mongodb, and this repo.
-
-#### Repo Installation
 
 - Setup
+  - Set up MongoDB
   - Install dependencies: `npm install -d`
   - Check if it runs: `npm start`
 
