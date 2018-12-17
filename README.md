@@ -1,45 +1,29 @@
 # Instagay
 
+
+### How This Works
+
+- The server runs a MongoDB server.
+- The server app runs an HTTP server that receives locations from OwnTracks and logs them. No need for MQTT!
+- The server app periodically checks Instagram for new photos with the given hashtags. 
+  - It finds photos with geolocations, and retreives the most recent logged location.
+  - If a photo is within X miles of the location, then it sends a Slack message!
+  - Photos that have already been found are logged in the DB so we don't check their location; this reduces the number of Instagram calls we can have.
+
+
 ### Setup
 
 Client-side: Owntracks on iOS / Android
-Server-side: `https://github.com/LINKIWI/orion-docker`
+Server-side: mongodb, and this repo.
 
-#### Orion-docker installation:
+#### Repo Installation
 
-- Install Docker & Docker-compose
-- in `.env`
-```
-MAPBOX_API_TOKEN=<your Mapbox API token>
-PORT=9999
-```
-- `sudo docker-compose up --build -d `
-- Things should be working at port `9999`
+- Setup
+  - Install dependencies: `npm install -d`
+  - Check if it runs: `npm start`
 
-Getting into Docker containers:
-
-- Do `sudo docker ps` and list the containers. Find the one with nginx.
-- `sudo docker exec -it {containerid} bash` will log you into the nginx container.
-- also do `apt-get update` and `apt-get install -y vim`
-
-Adding HTTP basic authentication:
-
-- On a computer, craft a .htpasswd file by. Each line should be:
-- `username:$apr1$3/abcxyc`
-- Generate everything after the colon with `openssl passwd -apr1`
-- Log into the nginx container
-- This should go into `/etc/.htpasswd` in the docker image for nginx.
-- Edit `/etc/nginx/nginx.conf` and add to all routes:
-```
-        auth_basic "Restricted Content";
-        auth_basic_user_file /etc/nginx/.htpasswd;
-```
-
-### Repo Installation
-
-- `npm install -d`
-
-### Startup stuff
-
-Install PM2:
-`npm install pm2 -g`
+- Run continuously:
+  - Install PM2: `npm install pm2 -g`
+  - Set PM2 to run on startup: `pm2 startup`, then run the code that results
+  - Use PM2 to start app: `pm2 start app/instagay.js`
+  - Save what's running on PM2 to run on restart `pm2 save`
