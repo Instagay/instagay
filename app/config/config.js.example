@@ -12,7 +12,7 @@ config.webserver = {};
 config.webserver.port = 3000;
 
 config.instagram = {};
-config.instagram.checking_interval = 120000;
+config.instagram.checking_interval = 120000; //interval in milliseconds
 
 config.database = {};
 config.database.igposts = {};
