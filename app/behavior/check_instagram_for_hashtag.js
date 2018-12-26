@@ -5,7 +5,7 @@ module.exports = function(config, abilities) {
   function is_post_nearby (post) {
       if(Object.keys(post).length == 0) { return false } //if post is empty, return empty
 
-      var dfp = abilities.phonetracker.getDistanceFromPhone(post.location.lat, post.location.lng)
+      let dfp = abilities.phonetracker.getDistanceFromPhone(post.location.lat, post.location.lng)
       if(dfp < config.phonetracker.milesRadius) {
         return true;
       } else {
@@ -36,8 +36,8 @@ module.exports = function(config, abilities) {
 
 	function send_success_message(post) {
 		console.log("WE FOUND ONE");
-    var dfp = abilities.phonetracker.getDistanceFromPhone(post.location.lat, post.location.lng)
-		var message = `NEW NEARBY POST ${dfp} mi away: ${post.url}`
+    let dfp = abilities.phonetracker.getDistanceFromPhone(post.location.lat, post.location.lng)
+		let message = `NEW NEARBY POST ${dfp} mi away: ${post.url}`
 		abilities.slack.send_message(message, function(error, res, body) {
 	//		console.log(error, body, res.statusCode);
 		});
@@ -56,7 +56,7 @@ module.exports = function(config, abilities) {
         if_post_not_in_db(post, function(newpost) {
           // WE FOUND ONE !!!
 
-          var simplepost = abilities.instagram._post_to_simplepost(newpost);
+          let simplepost = abilities.instagram._post_to_simplepost(newpost);
 
           save_post_to_db(simplepost, function(newdoc) {
             console.log(">> POST: nearby     , FOUND A NEW ONE ");
@@ -66,7 +66,7 @@ module.exports = function(config, abilities) {
         }, function(newpost) {
           // ehh, it already existed
           console.log(">> POST: nearby     , found an old one");
-          console.log(newpost);
+          console.log(Object.keys(newpost))
         });
 
       } else {
@@ -81,19 +81,24 @@ module.exports = function(config, abilities) {
   class HashtagQueue {
     constructor(hashtags) {
       this.hashtags = _.shuffle(hashtags)
+      console.log(this.hashtags);
       // the shuffle is done so that, if the program crashes regularly for some reason, all of the hashtags have an even chance at being checked for the first time
       this.hashtagrecords = [] 
-      var self = this;
+      let self = this;
       // sort and give them an order
       for (let h of hashtags) {
-        self.hashtagrecords.push({"tag": h, "lastupdated": new Date().getTime() })
+        self.hashtagrecords.push({"tag": h })
       }
     }
     get_oldest_hashtag() {
+      let self = this;
       // put records in order
-      this.hashtagrecords = _.sortBy(this.hashtagrecords, 'lastupdated')
-      this.hashtagrecords[0]['lastupdated'] = new Date().getTime()
-      return this.hashtagrecords[0]['tag']
+      let most_recent_tag = this.hashtagrecords[0];
+
+      // shift it around!
+      self.hashtagrecords.push(self.hashtagrecords.shift());
+
+      return most_recent_tag;
     }
   }
 
@@ -122,7 +127,7 @@ module.exports = function(config, abilities) {
 
     thisHQ = new HashtagQueue(tags)
 
-    var loop = function() {
+    let loop = function() {
 
       
       oldest_tag = thisHQ.get_oldest_hashtag()
