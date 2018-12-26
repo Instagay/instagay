@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/dantaeyoung/instagay#readme",
   "dependencies": {
-    "botkit": "^0.6.7",
+    "botkit": "^0.7.0",
+    "casperjs": "^1.1.4",
     "instagram-scraping": "^1.0.2",
     "instagram-tagscrape": "git+ssh://git@github.com/dantaeyoung/instagram-tagscrape.git",
     "jquery": "^3.2.1",
@@ -27,6 +28,7 @@
     "mongoose": "^5.3.10",
     "nedb": "^1.8.0",
     "nedb-promises": "^3.0.0",
+    "puppeteer": "^1.11.0",
     "request": "^2.87.0"
   }
 }

@@ -2,7 +2,7 @@ var request = require("request");
 var ig = require('instagram-tagscrape');
 
 
-class instagram {
+class Instagram {
 
 
   constructor(config) {
@@ -141,5 +141,5 @@ class instagram {
 }
 
 
-module.exports = instagram;
+module.exports = Instagram;
 
