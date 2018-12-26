@@ -3,7 +3,6 @@ var config = require('./config/config');
 console.log("+++++++++++ ABILITIES");
 var abilities = {};
 
-
 console.log("+adding+ slack");
 abilities.slack = new (require('./abilities/slack'))(config);
 
@@ -24,9 +23,6 @@ abilities.database = new (require('./abilities/database'))(config);
 function add_behaviors() {
 
   console.log("+++++++++++ BEHAVIORS");
-
-  console.log("+adding+ owntracks_http_server");
-  new (require('./behavior/owntracks_http_server'))(config, abilities);
 
   console.log("+adding+ check_instagram_for_hashtag");
   new (require('./behavior/check_instagram_for_hashtag'))(config, abilities);
