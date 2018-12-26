@@ -51,20 +51,22 @@ module.exports = function(config, abilities) {
     abilities.instagram.deepScrapeOnlyTagsWithLocations(hashtag, function(post) {
 
       if(is_post_nearby(post)) {
-
+        // well, the post is nearby.. and..
 
         if_post_not_in_db(post, function(newpost) {
+          // WE FOUND ONE !!!
 
           var simplepost = abilities.instagram._post_to_simplepost(newpost);
 
-          // WE FOUND ONE !!!
           save_post_to_db(simplepost, function(newdoc) {
             console.log(">> POST: nearby     , FOUND A NEW ONE ");
             send_success_message(simplepost);
           });
 
         }, function(newpost) {
-        console.log(">> POST: nearby     , found an old one");
+          // ehh, it already existed
+          console.log(">> POST: nearby     , found an old one");
+          console.log(newpost);
         });
 
       } else {
@@ -76,12 +78,13 @@ module.exports = function(config, abilities) {
 
 
 
-  class hashtagqueue {
+  class HashtagQueue {
     constructor(hashtags) {
       this.hashtags = _.shuffle(hashtags)
       // the shuffle is done so that, if the program crashes regularly for some reason, all of the hashtags have an even chance at being checked for the first time
       this.hashtagrecords = [] 
       var self = this;
+      // sort and give them an order
       for (let h of hashtags) {
         self.hashtagrecords.push({"tag": h, "lastupdated": new Date().getTime() })
       }
@@ -117,13 +120,18 @@ module.exports = function(config, abilities) {
 
   function run_behavior() {
 
-    thishashtagqueue = new hashtagqueue(tags)
+    thisHQ = new HashtagQueue(tags)
 
     var loop = function() {
-      oldest_tag = thishashtagqueue.get_oldest_hashtag()
-      console.log("####### CHECKING #" + oldest_tag);
+
+      
+      oldest_tag = thisHQ.get_oldest_hashtag()
+
+      console.log(`\n####### CHECKING the oldest tag:  ${oldest_tag}`);
+
       // scrape the oldest tag
       scrapeTagAndProcess(oldest_tag)
+
       update_phone_location();
     }
      
@@ -131,7 +139,6 @@ module.exports = function(config, abilities) {
     var interval = setInterval(loop, config.instagram.checking_interval);
 
   }
-
 
 
   update_phone_location(function() {
