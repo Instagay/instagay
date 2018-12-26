@@ -21,6 +21,9 @@ const puppeteer = require('puppeteer');
   mostrecentdiv.style.backgroundColor = "blue";
   });
 
+  // so this is working
+  // TODO: create code to find links, click on then, scan for location, etc
+
   await page.screenshot({path: 'example.png', fullPage: true});
 
   await browser.close();
