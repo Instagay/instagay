@@ -4,7 +4,7 @@
 ### How This Works
 
 - The server runs a MongoDB server.
-- The server app runs an HTTP server that receives locations from OwnTracks and logs them. No need for MQTT!
+- ~The server app runs an HTTP server that receives locations from OwnTracks~ Use (this repo)[https://github.com/dantaeyoung/Owntracks-to-db] to log phone locations to Mongodb
 - The server app periodically checks Instagram for new photos with the given hashtags. 
   - It retrieves the most recent logged phone location.
   - It filters for only the photos with geolocations.
