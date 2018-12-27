@@ -88,7 +88,6 @@ var get_location_coordinates = async (args) => {
 
 
 
-
 (async() => { 
 
     const tag_url_base = 'https://www.instagram.com/explore/tags/';
@@ -138,11 +137,13 @@ var get_location_coordinates = async (args) => {
 
     var posts_with_locations = []
 
-    for(const sc of shortcodes.slice(0,3)) {
+//    for(const sc of shortcodes) {
+    for(const sc of shortcodes.slice(0,3)) { // for debugging
 
         log(0, sc + "... ");
 
-        var postinfo = await get_post_info({ "url": `https://www.instagram.com/p/${sc}`, "hashtag": hashtag, "page": page});
+        var postinfo = {};
+        postinfo = await get_post_info({ "url": `https://www.instagram.com/p/${sc}`, "hashtag": hashtag, "page": page});
         if(postinfo.haslocation == true) {
 
             log(0, " YES, has a location: " + postinfo.href + "\n");
@@ -155,21 +156,22 @@ var get_location_coordinates = async (args) => {
             
             log(0, `lat: ${location_coordinates.lat}, lon: ${location_coordinates.lon}`)
 
-            console.log("");  console.log(this_post);
+            //console.log("");  console.log(this_post);
+            posts_with_locations.push(this_post);
             
-
             log(0, " Done!. \n");
 
         } else {
-            log(0, " Nope. \n");
+            log(0, " No location.\n");
         }
 
         await page.screenshot({path: `example_${sc}.png`, fullPage: true});
     }
-    log(0, " Done with all recent posts! \n");
+    log(0, " Done getting locations of all recent posts! \n");
 
-
-    // TODO: create code to find links, click on then, scan for location, etc
+    
+    log(0, " Location of iphone... ");
+            // TODO: create code to find links, click on then, scan for location, etc
 
 
     log(0, "===" + hashtag + "==> Closing browser... ");
