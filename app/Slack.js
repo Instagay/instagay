@@ -51,6 +51,11 @@ class Slack {
       }, cb);
   }
 
+  closeRTM() {
+    this.bot.closeRTM();
+  }
+
+
 }
 
 module.exports = Slack;

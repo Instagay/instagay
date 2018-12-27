@@ -1,30 +1,58 @@
 const config = require('./config/config');
-const log = require('./Helpers').log;
 const Slack = require('./Slack');
+const Helpers = require('./Helpers');
 const Database = require('./Database');
 const Instapuppet = require('./Instapuppet');
+
+var slack;
+
+var log = (msg) => {
+  console.log(msg);
+}
+
+var logslack = (msg) => {
+  log(msg);
+//  slack.send_message(msg.toString());
+}
 
 
 (async () => {
 
-    console.log("+++++++++++ ABILITIES");
-    var abilities = {};
+  log("================ ");
+  var abilities = {};
 
-    console.log("+adding+ Slack");
-    var slack = new Slack(config);
+  log("+++ adding Slack");
+  slack = new Slack(config);
 
-    /*
-    console.log("+adding+ Database");
-    var database = new Database(config);
+  logslack("=== INSTAGAY is starting...");
 
-    await database.init(); */
+  log("+++ adding Database");
+  var database = new Database(config);
 
-    console.log("= RUNNING!");
+  await database.init(); 
+  var phone_location = await database.get_phone_location();
 
-    //slack.send_message("INSTAGAY is up and running");
+  logslack(`--- Current location of phone is: ${phone_location.lat}, ${phone_location.lon} as of ${phone_location.tst} (timestamp)`);
 
-	var posts = await Instapuppet.get_posts_with_locations_by_hashtag("sunnyxmas")
+  var hashtag = "sunnyxmas";
 
-	console.log(posts);
+  logslack("--- Connecting to Slack and Database worked.")
+  logslack(`Now running Instapuppet scraper with #${hashtag}. This might take up to 5 minutes.`);
+
+  try { 
+    var posts = await Instapuppet.get_posts_with_locations_by_hashtag(hashtag)
+  } catch(err) {
+    logslack("<!channel> *Something went wrong!* "  + err.stack);
+  }
+
+  logslack("--- Scraper finished! Now checking posts against current location.")
+
+  for (let post of posts) {
+    var dist = Helpers.calcDistMi(phone_location.lat, phone_location.lon, post.lat, post.lon)
+    log(`Distance from post = ${dist} miles`);
+  }
+
+
+  database.close();
 
 })();

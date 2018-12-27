@@ -4,9 +4,13 @@ Helpers.log  = (indentlevel, msg) => {
 	process.stdout.write("    ".repeat(indentlevel) + msg);
 }
 
+Helpers.SigFig = function(x, n) {
+	return Math.round(x * 10 ** n) / 10 ** n;
+}
+
 
 Helpers.calcDistMi = (lat1, lon1, lat2, lon2) => {
-	return Helpers.calcDist(lat1, lon1, lat2, lon2) * 0.621371;
+	return Helpers.SigFig(Helpers.calcDist(lat1, lon1, lat2, lon2) * 0.621371, 2);
 }
 
 Helpers.calcDist = (lat1, lon1, lat2, lon2) => {

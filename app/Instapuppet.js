@@ -41,7 +41,7 @@ Instapuppet.get_recent_posts_from_page = async(args) =>  {
 Instapuppet.get_post_info = async (args) => {
     // args should have "url" and "page"
     await args.page.goto(args.url)
-    return args.page.evaluate((hashtag) => {
+    var postinfo = args.page.evaluate((hashtag) => {
         var atags = document.getElementsByTagName("a");
         var maybelocationtag = [...atags].filter((x) => {
             return x.href.match(/instagram\.com\/explore\/locations\/(.*)\//) !== null
@@ -74,7 +74,9 @@ Instapuppet.get_post_info = async (args) => {
         return thispost
 
     }, args.hashtag)
-}
+    postinfo.url = args.url; postinfo.hashtag = args.hashtag;
+    return postinfo
+ }
 
 
 
@@ -147,6 +149,8 @@ Instapuppet.get_posts_with_locations_by_hashtag = async (hashtag) => {
 
         var postinfo = {};
         postinfo = await Instapuppet.get_post_info({ "url": `https://www.instagram.com/p/${sc}`, "hashtag": hashtag, "page": page});
+        postinfo.sc = sc;
+
         if(postinfo.haslocation == true) {
 
             log(0, " YES, has a location: " + postinfo.href + "\n");
