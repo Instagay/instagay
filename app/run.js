@@ -22,7 +22,7 @@ var logdevslack = (msg) => {
 }
 
 
-(async () => {
+var run = async () => {
 
   log("================ ");
   var abilities = {};
@@ -124,4 +124,13 @@ var logdevslack = (msg) => {
 
   database.close();
 
-})();
+}
+
+
+var dorun = async () => {
+	await run();
+	setTimeout(dorun, 1000);
+}
+
+setTimeout(dorun, 1000);
+
