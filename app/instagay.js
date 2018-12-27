@@ -1,22 +1,30 @@
 const config = require('./config/config');
 const log = require('./Helpers').log;
-const Slack = require('./Slack')
-const Database = require('./Database')
-const Instapuppet = require('./Instapuppet')
+const Slack = require('./Slack');
+const Database = require('./Database');
+const Instapuppet = require('./Instapuppet');
 
-console.log("+++++++++++ ABILITIES");
-var abilities = {};
 
-console.log("+adding+ Slack");
-var slack = new Slack(config);
+(async () => {
 
-console.log("+adding+ Database");
-var database = new Database(config);
+    console.log("+++++++++++ ABILITIES");
+    var abilities = {};
 
-database.init().then(() => {
-})
+    console.log("+adding+ Slack");
+    var slack = new Slack(config);
 
-console.log("= RUNNING!");
+    /*
+    console.log("+adding+ Database");
+    var database = new Database(config);
 
-slack.send_message("INSTAGAY is up and running");
+    await database.init(); */
 
+    console.log("= RUNNING!");
+
+    //slack.send_message("INSTAGAY is up and running");
+
+	var posts = await Instapuppet.get_posts_with_locations_by_hashtag("sunnyxmas")
+
+	console.log(posts);
+
+})();

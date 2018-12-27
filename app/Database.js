@@ -4,26 +4,28 @@ const url = 'mongodb://localhost:27017';
 
 class Database {
 
-  constructor(config) {
-    this.config = config;
-    this.db = {};
-  }
+    constructor(config) {
+        this.config = config;
+        this.db = {};
+        this.client = null;
+    }
 
-  init() {
-    var self = this;
-    return new Promise(function(resolve, reject) {
-      MongoClient.connect(url, function(err, client) {
-        assert.equal(null, err);
+    async init() {
+        var self = this;
 
-        console.log("Connected successfully to server");
-        var db = client.db('instagay')
-        self.db.igposts = db.collection('igposts')
-        self.db.owntracks = db.collection('owntracks')
-        resolve();
-      });
-    });
+        self.client = new MongoClient(url, { useNewUrlParser: true });
 
-  }
+        try {
+            await MongoClient.connect()
+            console.log("Connected successfully to server");
+            var _db = self.client.db('instagay')
+            self.db.igposts = _db.collection('igposts')
+            self.db.owntracks = _db.collection('owntracks')
+        } catch(err) {
+            console.log(err.stack);
+        }
+
+    }
 
 }
 

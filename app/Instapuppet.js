@@ -112,7 +112,7 @@ Instapuppet.get_posts_with_locations_by_hashtag = async (hashtag) => {
 
     log(0, "===" + hashtag + "==> Scrolling...")
 
-    await scroll_to_bottom({ "page": page, "times": 3 })
+    await Instapuppet.scroll_to_bottom({ "page": page, "times": 3 })
     log(0, " Done! \n");
 
 
@@ -122,7 +122,7 @@ Instapuppet.get_posts_with_locations_by_hashtag = async (hashtag) => {
 
     log(0, "===" + hashtag + "==> Getting the shortcodes/urls of most recent posts... ")
 
-    var shortcodes = await get_recent_posts_from_page({ "page": page });
+    var shortcodes = await Instapuppet.get_recent_posts_from_page({ "page": page });
     log(0, " Done! \n");
 
     log(0, shortcodes.join("\n") + "\n");
@@ -140,13 +140,13 @@ Instapuppet.get_posts_with_locations_by_hashtag = async (hashtag) => {
         log(0, sc + "... ");
 
         var postinfo = {};
-        postinfo = await get_post_info({ "url": `https://www.instagram.com/p/${sc}`, "hashtag": hashtag, "page": page});
+        postinfo = await Instapuppet.get_post_info({ "url": `https://www.instagram.com/p/${sc}`, "hashtag": hashtag, "page": page});
         if(postinfo.haslocation == true) {
 
             log(0, " YES, has a location: " + postinfo.href + "\n");
             log(2, "--- Looking up this location coordinates... ")
 
-            var location_coordinates = await get_location_coordinates({ "locationhref": postinfo.href, "page": page })
+            var location_coordinates = await Instapuppet.get_location_coordinates({ "locationhref": postinfo.href, "page": page })
 
             // we have the post info!
             this_post = {...postinfo, ...location_coordinates}
@@ -162,7 +162,7 @@ Instapuppet.get_posts_with_locations_by_hashtag = async (hashtag) => {
             log(0, " No location.\n");
         }
 
-        await page.screenshot({path: `example_${sc}.png`, fullPage: true});
+//        await page.screenshot({path: `example_${sc}.png`, fullPage: true});
     }
     log(0, " Done getting locations of all recent posts! \n");
     
