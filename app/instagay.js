@@ -34,7 +34,7 @@ var logslack = (msg) => {
 
   logslack(`--- Current location of phone is: ${phone_location.lat}, ${phone_location.lon} as of ${phone_location.tst} (timestamp)`);
 
-  var hashtag = "sunnyxmas";
+  var hashtag = "timessquare";
 
   logslack("--- Connecting to Slack and Database worked.")
   logslack(`Now running Instapuppet scraper with #${hashtag}. This might take up to 5 minutes.`);
@@ -47,9 +47,30 @@ var logslack = (msg) => {
 
   logslack("--- Scraper finished! Now checking posts against current location.")
 
+  console.log(posts);
+
   for (let post of posts) {
+
+
     var dist = Helpers.calcDistMi(phone_location.lat, phone_location.lon, post.lat, post.lon)
-    log(`Distance from post = ${dist} miles`);
+    if(dist <= config.phonetracker.milesRadius) {
+
+      // post is nearby ..
+      log(`${post.sc}... ${dist} mi away. Oh!! We have a post nearby within ${config.phonetracker.milesRadius} miles. Is it new?...`);
+      if(await database.have_we_already_found_this_valid_post_before(post) == true) {
+
+        // IT'S A NEW POST
+        logslack(`   --- YES!! We have found a new post ${dist} mi away! By @${post.username} at ${post.url}!! <!channel>`);
+//        await database.mark_post_as_found(post);
+      } else {
+
+        // It's an old post.
+        log(`   --- Ah, we've seen this before.`);
+      }
+    } else {
+      // post is not nearby.
+      log(`${post.sc}... ${dist} mi away. Too far.`);
+    }
   }
 
 

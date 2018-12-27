@@ -40,8 +40,9 @@ Instapuppet.get_recent_posts_from_page = async(args) =>  {
 
 Instapuppet.get_post_info = async (args) => {
     // args should have "url" and "page"
-    await args.page.goto(args.url)
-    var postinfo = args.page.evaluate((hashtag) => {
+    var url = `https://www.instagram.com/p/${args.sc}`;
+    await args.page.goto(url);
+    var postinfo = await args.page.evaluate((hashtag) => {
         var atags = document.getElementsByTagName("a");
         var maybelocationtag = [...atags].filter((x) => {
             return x.href.match(/instagram\.com\/explore\/locations\/(.*)\//) !== null
@@ -67,14 +68,16 @@ Instapuppet.get_post_info = async (args) => {
         var thispost = { "username": username, "posttext": posttext };
         if(maybelocationtag.length > 0) {
             // we have a winner
-            thispost = {...thispost, ...{"haslocation": true, "href": maybelocationtag[0].href, "name": maybelocationtag[0].innerText }};
+            thispost = {...thispost, ...{"haslocation": true, "locationhref": maybelocationtag[0].href, "locationname": maybelocationtag[0].innerText }};
         } else {
             thispost = {...thispost, ...{"haslocation": false}}
         }
         return thispost
 
-    }, args.hashtag)
-    postinfo.url = args.url; postinfo.hashtag = args.hashtag;
+    }, args.hashtag);
+    postinfo["url"] = url;
+    postinfo["sc"] = args.sc;
+    postinfo["hashtag"] = args.hashtag;
     return postinfo
  }
 
@@ -148,15 +151,14 @@ Instapuppet.get_posts_with_locations_by_hashtag = async (hashtag) => {
         log(0, sc + "... ");
 
         var postinfo = {};
-        postinfo = await Instapuppet.get_post_info({ "url": `https://www.instagram.com/p/${sc}`, "hashtag": hashtag, "page": page});
-        postinfo.sc = sc;
+        postinfo = await Instapuppet.get_post_info({ "sc": sc, "hashtag": hashtag, "page": page});
 
         if(postinfo.haslocation == true) {
 
-            log(0, " YES, has a location: " + postinfo.href + "\n");
+            log(0, " YES, has a location: " + postinfo.locationhref + "\n");
             log(2, "--- Looking up this location coordinates... ")
 
-            var location_coordinates = await Instapuppet.get_location_coordinates({ "locationhref": postinfo.href, "page": page })
+            var location_coordinates = await Instapuppet.get_location_coordinates({ "locationhref": postinfo.locationhref, "page": page })
 
             // we have the post info!
             this_post = {...postinfo, ...location_coordinates}
