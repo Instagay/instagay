@@ -36,6 +36,9 @@ var logslack = (msg) => {
 
   var hashtag = "timessquare";
 
+  log(`--- Finding oldest tag.....`)
+  var hashtag = await database.find_oldest_tag();
+
   logslack("--- Connecting to Slack and Database worked.")
   logslack(`Now running Instapuppet scraper with #${hashtag}. This might take up to 5 minutes.`);
 
@@ -45,9 +48,12 @@ var logslack = (msg) => {
     logslack("<!channel> *Something went wrong!* "  + err.stack);
   }
 
-  logslack("--- Scraper finished! Now checking posts against current location.")
 
   console.log(posts);
+  console.log("==============");
+  console.log("==============");
+
+  logslack("--- Scraper finished! Now checking posts against current location.")
 
   for (let post of posts) {
 
@@ -56,12 +62,13 @@ var logslack = (msg) => {
     if(dist <= config.phonetracker.milesRadius) {
 
       // post is nearby ..
-      log(`${post.sc}... ${dist} mi away. Oh!! We have a post nearby within ${config.phonetracker.milesRadius} miles. Is it new?...`);
-      if(await database.have_we_already_found_this_valid_post_before(post) == true) {
+      log(`${post.sc}... ${dist} mi away. Is it new?...`);
+      if(await database.have_we_already_found_this_valid_post_before(post) == false) {
 
         // IT'S A NEW POST
         logslack(`   --- YES!! We have found a new post ${dist} mi away! By @${post.username} at ${post.url}!! <!channel>`);
-//        await database.mark_post_as_found(post);
+        await database.mark_post_as_found(post);
+        log("   --- Just marked it as new so we won't see it again.");
       } else {
 
         // It's an old post.
@@ -73,6 +80,9 @@ var logslack = (msg) => {
     }
   }
 
+  log(`--- Marking tag #${hashtag} as searched! `);
+  await database.mark_tag_as_searched(hashtag);
+ 
 
   database.close();
 
