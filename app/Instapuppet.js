@@ -49,13 +49,19 @@ Instapuppet.get_post_info = async (args) => {
 
         // get username by finding a tag that has the same inner text and href
         var username = [...atags].filter((x) => {
-           return x.innerText.length > 0 && x.getAttribute("href").replace(/\//g, "") === x.innerText;
+           return x.innerText.length > 0 && x.getAttribute("href").replace(/\//g, "").toUpperCase() === x.innerText.toUpperCase();
         })[0].innerText;
 
         // get posttext by. finding
-        var posttext = [...document.getElementsByTagName("a")].filter((x) => {
-            return x.innerText == "#" + hashtag
-        })[0].parentElement.innerText;
+        var posttext = "";
+       
+        try {
+            posttext = [...document.getElementsByTagName("a")].filter((x) => {
+                return x.innerText.toUpperCase() == "#" + hashtag.toUpperCase()
+            })[0].parentElement.innerText;
+        } catch(err) {
+            console.log(err);
+        }
 
         
         var thispost = { "username": username, "posttext": posttext };
