@@ -1,6 +1,6 @@
 const request = require('request');
 
-class slack {
+class Slack {
 
   constructor(config) {
     this.config = config;
@@ -53,5 +53,5 @@ class slack {
 
 }
 
-module.exports = slack;
+module.exports = Slack;
 

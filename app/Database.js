@@ -2,7 +2,7 @@ var assert = require('assert');
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:27017';
 
-class database {
+class Database {
 
   constructor(config) {
     this.config = config;
@@ -27,5 +27,5 @@ class database {
 
 }
 
-module.exports = database ;
+module.exports = Database;
 
