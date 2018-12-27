@@ -1,7 +1,6 @@
 var assert = require('assert');
 var MongoClient = require('mongodb').MongoClient;
 var _ = require('lodash');
-var url = "mongodb://localhost:27017";
 
 class Database {
 
@@ -9,6 +8,7 @@ class Database {
     this.config = config;
     this.db = {};
     this.client = null;
+    this.url = `mongodb://${config.database.user}:${config.database.pwd}@${config.database.host}:${config.database.port}/${config.database.dbname}`;
   }
 
   async init() {
@@ -16,9 +16,9 @@ class Database {
 
 
     try {
-      self.client = await MongoClient.connect(url, { useNewUrlParser: true });
+      self.client = await MongoClient.connect(self.url, { useNewUrlParser: true });
+      var _db = self.client.db(self.config.database.dbname)
       console.log("Connected successfully to server");
-      var _db = self.client.db('instagay')
       self.db.tagsearchlog = _db.collection('tagsearchlog')
       self.db.igposts = _db.collection('igposts')
       self.db.owntracks = _db.collection('owntracks')
