@@ -40,6 +40,10 @@ Instapuppet.scroll_to_bottom = async(args) => {
 Instapuppet.get_recent_posts_from_page = async(args) =>  {
     // args should have page
     var shortcodes = await args.page.evaluate(() => {
+        var mostrecenttext = document.evaluate("//h2[contains(., 'Most recent')]", document, null, XPathResult.ANY_TYPE, null ).iterateNext();
+
+				if(mostrecenttext == null) { return []; } // sometimes the most recent text is not shown.. Instagram: "We may remove the Top or Recent posts in a hashtag page if people are using the hashtag to post abusive content in a highly visible place. Learn more about our Community Guidelines."
+
         var mostrecentdiv = document.evaluate("//h2[contains(., 'Most recent')]", document, null, XPathResult.ANY_TYPE, null ).iterateNext().nextSibling;
         var shortcodes = [...mostrecentdiv.querySelectorAll("a")].map((x) => {
             return x.getAttribute("href").match(/p\/(.*)\//)[1]; 
@@ -113,17 +117,34 @@ Instapuppet.get_location_coordinates = async (args) => {
 
 Instapuppet.get_posts_with_locations_by_hashtag = async (hashtag) => { 
 
+	log(0, "===" + hashtag + "==> Starting Puppeteer/Chromium browser and page...") 
+	const browser = await puppeteer.launch({ headless: true });
+	var page = await browser.newPage();
+	log(0, " Done! \n");
+
+	var posts = [];
+	try {
+		posts = await Instapuppet._get_posts_with_locations_by_hashtag(page, hashtag);
+	} catch(err) {
+		log("\nXXXX We've got an error! Taking a screenshot....")
+    await page.screenshot({path: `error_screenshot.png`, fullPage: true});
+		throw(err);
+	}
+
+	log(0, "===" + hashtag + "==> Closing browser... ");
+	await browser.close();
+	log(0, " Done! \n");
+
+	return posts;
+
+}
+
+
+Instapuppet._get_posts_with_locations_by_hashtag = async (page,hashtag) => { 
+
     const tag_url_base = 'https://www.instagram.com/explore/tags/';
     //var hashtag = "sunnyxmas";
     var url = tag_url_base + hashtag;
-
-    ///
-
-    log(0, "===" + hashtag + "==> Starting Puppeteer/Chromium browser and page...") 
-    const browser = await puppeteer.launch({ headless: true });
-    var page = await browser.newPage();
-    log(0, " Done! \n");
-
 
 
 
@@ -191,9 +212,6 @@ Instapuppet.get_posts_with_locations_by_hashtag = async (hashtag) => {
     }
     log(0, " Done getting locations of all recent posts! \n");
     
-    log(0, "===" + hashtag + "==> Closing browser... ");
-    await browser.close();
-    log(0, " Done! \n");
 
     return posts_with_locations;
 

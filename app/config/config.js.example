@@ -2,6 +2,7 @@ var config = {};
 
 config.slack = {};
 config.slack.webhook_url = "https://hooks.slack.com/services/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+config.slack.dev_webhook_url = "https://hooks.slack.com/services/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 config.slack.username = "robot";
 config.slack.icon_emoji = ":robot_face:";
 

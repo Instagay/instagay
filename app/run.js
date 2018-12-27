@@ -13,7 +13,12 @@ var log = (msg) => {
 
 var logslack = (msg) => {
   log(msg);
-  //slack.send_message(msg.toString());
+  slack.send_message(msg.toString());
+}
+
+var logdevslack = (msg) => {
+  log(msg);
+  slack.send_dev_message(msg.toString());
 }
 
 
@@ -46,9 +51,13 @@ var logslack = (msg) => {
   try { 
     var posts = await Instapuppet.get_posts_with_locations_by_hashtag(hashtag)
   } catch(err) {
-    logslack("<!channel> *Something went wrong!* "  + err.stack);
+    logdevslack("<!channel> *Something went wrong!* "  + err.stack);
     return;
   }
+
+	if(posts.length == 0) {
+		logdevslack(` We couldn't get the Most recent posts from #${hashtag} for some reason. This might be because of Instagram's policy to temporary disable showing them: https://help.instagram.com/861508690592298 `); 
+	}
 
 
   console.log(posts);

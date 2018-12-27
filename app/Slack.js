@@ -35,7 +35,7 @@ class Slack {
 		});
 	}
 
-  send_message(text, cb) {
+  _sendmsg(url, text, cb) {
 		var self = this;
     var payload = {
           "text": text,
@@ -44,12 +44,21 @@ class Slack {
     };
     request.post({
         headers : { 'Content-type' : 'application/json' },
-        url: self.config.slack.webhook_url,
+        url: url,
         form : {
           payload: JSON.stringify(payload)
         }
       }, cb);
   }
+
+  send_dev_message(text, cb) {
+    this._sendmsg(this.config.slack.dev_webhook_url, text, cb);
+  }
+
+  send_message(text, cb) {
+    this._sendmsg(this.config.slack.webhook_url, text, cb);
+  }
+
 
   closeRTM() {
     this.bot.closeRTM();
