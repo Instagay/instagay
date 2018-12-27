@@ -3,23 +3,36 @@ var Instapuppet = {};
 const puppeteer = require('puppeteer');
 const log = require('./Helpers').log;
 
+
+Instapuppet.autoscroll = async (args) => {
+    await args.page.evaluate(async () => {
+        await new Promise((resolve, reject) => {
+            var totalHeight = 0;
+            var distance = 100;
+            var timer = setInterval(() => {
+                var scrollHeight = document.body.scrollHeight;
+                window.scrollBy(0, distance);
+                totalHeight += distance;
+
+                if(totalHeight >= scrollHeight){
+                    clearInterval(timer);
+                    resolve();
+                }
+            }, 100);
+        });
+    });
+}
+
 Instapuppet.scroll_to_bottom = async(args) => {
 
-    for (let i = 0; i <= args.times; i++) {
-        var previousHeight = await args.page.evaluate('document.body.scrollHeight');
-        await args.page.evaluate('window.scrollTo(0, document.body.scrollHeight)');
-        await args.page.waitForFunction(`document.body.scrollHeight > ${previousHeight}`);
-        await args.page.waitFor(500)
+//    await args.page.screenshot({path: `beforescroll.png`, fullPage: true});
+
+    for (let i = 0; i < args.times; i++) {
+			log(0, "..scrolling..");
+			await Instapuppet.autoscroll({ page: args.page });
     }
-    // this is a little wonky. not exactly sure why. test with chromium:
-    /*
-     window.scrollTo(0, document.body.scrollHeight)
-     
-     then 
-     [...document.getElementsByTagName("a")].filter((x) => {
-        return x.href.match(/p\/(.*)\//) !== null;
-     }).map((x) => { return x.href; }) 
-     */
+  console.log("loopdone");
+//    await args.page.screenshot({path: `afterscroll.png`, fullPage: true});
 
     return
 }

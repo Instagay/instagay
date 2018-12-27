@@ -13,7 +13,7 @@ var log = (msg) => {
 
 var logslack = (msg) => {
   log(msg);
-  slack.send_message(msg.toString());
+  //slack.send_message(msg.toString());
 }
 
 
