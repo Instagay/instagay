@@ -145,8 +145,8 @@ Instapuppet.get_posts_with_locations_by_hashtag = async (hashtag) => {
 
     var posts_with_locations = []
 
-//    for(const sc of shortcodes) {
-    for(const sc of shortcodes.slice(0,3)) { // for debugging
+    for(const sc of shortcodes) {
+//    for(const sc of shortcodes.slice(0,3)) { // for debugging
 
         log(0, sc + "... ");
 

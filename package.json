@@ -5,7 +5,7 @@
   "main": "instagay.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app/instagay.js"
+    "start": "node app/run.js"
   },
   "repository": {
     "type": "git",
