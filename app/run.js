@@ -83,7 +83,7 @@ var logdevslack = (msg) => {
 
         // only notify current location of phone if true
         if(found_valid_post == false) {
-          logslack(`--- Current location of phone is: ${phone_location.lat}, ${phone_location.lon} as of ${phone_location.tst} (timestamp). To see location: https://www.google.com/maps/place/${phone_location.lat}, ${phone_location.lon}`);
+          logslack(`--- Current location of phone is: ${phone_location.lat}, ${phone_location.lon} as of ${phone_location.tst} (timestamp). To see location: https://www.google.com/maps/place/${phone_location.lat},${phone_location.lon}`);
           found_valid_post = true;
         }
 
