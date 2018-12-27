@@ -89,7 +89,7 @@ var run = async () => {
         }
 
         // IT'S A NEW POST
-        logslack(`   *--- YES!! We have found a new post ${dist} mi away! By @${post.username} at ${post.url}!! <!channel>* Located here: https://www.google.com/maps/place/${post.location_coordinates.lat},${post.location_coordinates.lon}`);
+        logslack(`   *--- YES!! We have found a new post ${dist} mi away! By @${post.username} at ${post.url}!! <!channel>* Located here: https://www.google.com/maps/place/${post.lat},${post.lon}`);
         await database.mark_post_as_found(post);
         log("   --- Just marked it as new so we won't see it again.");
       } else {
