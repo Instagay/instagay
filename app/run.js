@@ -83,12 +83,13 @@ var run = async () => {
 
         // only notify current location of phone if true
         if(found_valid_post == false) {
-          logslack(`--- Current location of phone is: ${phone_location.lat}, ${phone_location.lon} as of ${phone_location.tst} (timestamp). To see location: https://www.google.com/maps/place/${phone_location.lat},${phone_location.lon}`);
+          logslack(`--- Current location of phone is: ${phone_location.lat}, ${phone_location.lon} as of ${phone_location.tst} (timestamp).`);
+          log(`To see location: https://www.google.com/maps/place/${phone_location.lat},${phone_location.lon}`);
           found_valid_post = true;
         }
 
         // IT'S A NEW POST
-        logslack(`   *--- YES!! We have found a new post ${dist} mi away! By @${post.username} at ${post.url}!! <!channel>*`);
+        logslack(`   *--- YES!! We have found a new post ${dist} mi away! By @${post.username} at ${post.url}!! <!channel>* Located here: https://www.google.com/maps/place/${post.location_coordinates.lat},${post.location_coordinates.lon}`);
         await database.mark_post_as_found(post);
         log("   --- Just marked it as new so we won't see it again.");
       } else {
