@@ -129,7 +129,7 @@ Instapuppet.get_post_info = async (args) => {
 
 Instapuppet.get_location_coordinates = async (args) => {
   await args.page.goto(args.locationhref)
-  return args.page.evaluate(() => {
+  return await args.page.evaluate(() => {
     var coords = {};
     coords.lat = document.querySelector("meta[property='place:location:latitude']").content;
     coords.lon = document.querySelector("meta[property='place:location:longitude']").content;

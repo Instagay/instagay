@@ -51,7 +51,7 @@ var run = async () => {
   try { 
     var posts = await Instapuppet.get_posts_with_locations_by_hashtag(hashtag)
   } catch(err) {
-    logdevslack("<!channel> *Something went wrong!* "  + err.stack);
+    logdevslack("*Something went wrong!* "  + err.stack);
     return;
   }
 
