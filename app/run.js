@@ -128,11 +128,13 @@ var run = async () => {
 
 }
 
-
-var dorun = async () => {
-	await run();
-	setTimeout(dorun, 1000);
+try {
+  var dorun = async () => {
+    await run();
+    setTimeout(dorun, 10000);
+  }
+  setTimeout(dorun, 10000);
+} catch(err) {
+  slackdevlog(err);
 }
-
-setTimeout(dorun, 1000);
 
