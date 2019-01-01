@@ -29,6 +29,7 @@
     "mongoose": "^5.3.10",
     "nedb": "^1.8.0",
     "nedb-promises": "^3.0.0",
+    "ps-node": "^0.1.6",
     "puppeteer": "^1.11.0",
     "request": "^2.87.0"
   }

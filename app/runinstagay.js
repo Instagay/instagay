@@ -4,6 +4,7 @@ const Helpers = require('./Helpers');
 const Database = require('./Database');
 const Instapuppet = require('./Instapuppet');
 var _ = require('lodash');
+var ps = require('ps-node');
 
 var slack;
 
@@ -22,7 +23,7 @@ var logdevslack = (msg) => {
 }
 
 
-var run = async () => {
+var run_for_one_hashtag =  async () => {
 
   log("================ ");
   var abilities = {};
@@ -128,13 +129,52 @@ var run = async () => {
 
 }
 
-try {
-  var dorun = async () => {
-    await run();
-    setTimeout(dorun, 10000);
-  }
-  setTimeout(dorun, 10000);
-} catch(err) {
-  slackdevlog(err);
+
+
+
+
+
+
+
+
+
+
+
+are_we_the_only_process_running = () => {
+  return new Promise(resolve => {
+
+    // A simple pid lookup
+    ps.lookup({
+      command: 'node',
+      arguments: 'runinstagay.js',
+    }, function(err, resultList ) {
+      if (err) {
+        throw new Error( err );
+      }
+
+      if(resultList.length <= 1) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+
+    });
+
+  });
 }
+
+
+
+(async () => {
+  try { 
+    if(await are_we_the_only_process_running() == true) {
+      run_for_one_hashtag();
+    } else {
+      console.log("Another instance is still running! Try again later.");
+    }
+  } catch(err) {
+    logdevslack(err);
+  }
+})();
+
 
