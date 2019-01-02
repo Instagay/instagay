@@ -49,12 +49,7 @@ var run_for_one_hashtag =  async () => {
   log("--- Connecting to Slack and Database worked.")
   log(`Now running Instapuppet scraper with #${hashtag}. This might take up to 5 minutes.`);
 
-  try { 
-    var posts = await Instapuppet.get_posts_with_locations_by_hashtag(hashtag)
-  } catch(err) {
-    logdevslack("*Something went wrong!* "  + err.stack);
-    return;
-  }
+  var posts = await Instapuppet.get_posts_with_locations_by_hashtag(hashtag)
 
 	if(posts.length == 0) {
 		logdevslack(` We couldn't get the Most recent posts from #${hashtag} for some reason. This might be because of Instagram's policy to temporary disable showing them: https://help.instagram.com/861508690592298 `); 
