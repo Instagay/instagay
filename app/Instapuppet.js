@@ -128,13 +128,17 @@ Instapuppet.get_post_info = async (args) => {
 
 
 Instapuppet.get_location_coordinates = async (args) => {
-  await args.page.goto(args.locationhref)
-  return await args.page.evaluate(() => {
-    var coords = {};
-    coords.lat = document.querySelector("meta[property='place:location:latitude']").content;
-    coords.lon = document.querySelector("meta[property='place:location:longitude']").content;
-    return coords;
-  });
+  try {
+    await args.page.goto(args.locationhref)
+    return await args.page.evaluate(() => {
+      var coords = {};
+      coords.lat = document.querySelector("meta[property='place:location:latitude']").content;
+      coords.lon = document.querySelector("meta[property='place:location:longitude']").content;
+      return coords;
+    });
+  } catch (err) {
+    return {}
+  }
 }
 
 
@@ -221,15 +225,22 @@ Instapuppet._get_posts_with_locations_by_hashtag = async (page,hashtag) => {
 
       var location_coordinates = await Instapuppet.get_location_coordinates({ "locationhref": postinfo.locationhref, "page": page })
 
-      // we have the post info!
-      this_post = {...postinfo, ...location_coordinates}
+      if(Object.keys(location_coordinates).length === 0) {
 
-      log(0, `lat: ${location_coordinates.lat}, lon: ${location_coordinates.lon}`)
+        log(0, " Error: can't find location.\n");
 
-      //console.log("");  console.log(this_post);
-      posts_with_locations.push(this_post);
+      } else {
 
-      log(0, " Done!. \n");
+        // we have the post info!
+        this_post = {...postinfo, ...location_coordinates}
+
+        log(0, `lat: ${location_coordinates.lat}, lon: ${location_coordinates.lon}`)
+
+        //console.log("");  console.log(this_post);
+        posts_with_locations.push(this_post);
+
+        log(0, " Done!. \n");
+      }
 
     } else {
       log(0, " No location.\n");

@@ -28,5 +28,6 @@ Client-side: Owntracks on iOS / Android
 - Run continuously:
   - Install PM2: `npm install pm2 -g`
   - Set PM2 to run on startup: `pm2 startup`, then run the code that results
-  - Use PM2 to start: `pm2 start app/run.js --name "runinstagay" --restart-delay=500`
+  - Use PM2 to start: `pm2 start runinstagay.js --name "instagay" --restart-delay=500 --cron "0 * * * *"`
+    - (The cron command just manually restarts runinstagay every hour)
   - Save what's running on PM2 to run on restart `pm2 save`
