@@ -6,6 +6,7 @@
 - The server runs a MongoDB server.
 - ~The server app runs an HTTP server that receives locations from OwnTracks~ Use [this repo](https://github.com/dantaeyoung/Owntracks-to-db) to log phone locations to Mongodb
 - The server is a script. Run once, it:
+  - It checks if another instance of it is currently running. If it isn't:
   - It retrieves the most recent logged phone location.
   - It finds the tag that has been searched the longest ago.
   - Using that hashtag, it searches Instagram for new photos with the given hashtags. This is done via Puppeteer.
@@ -13,6 +14,7 @@
   - If a photo is within X miles of the location, then it sends a Slack message!
   - Photos that have already been looked at are logged in the DB so we don't check their location; this reduces the number of Instagram calls we can do.
   
+- This script is called every minute.
 
 ### Setup
 
