@@ -164,7 +164,7 @@ are_we_the_only_process_running = () => {
 }
 
 
-
+/*
 (async () => {
   try { 
     if(await are_we_the_only_process_running() == true) {
@@ -176,5 +176,7 @@ are_we_the_only_process_running = () => {
     logdevslack(err);
   }
 })();
+*/
 
+run_for_one_hashtag();
 
