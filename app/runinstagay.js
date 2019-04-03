@@ -72,11 +72,12 @@ var run_for_one_hashtag =  async () => {
 
   var found_valid_post = false;
 
+  var phonetracker_radius = await Helpers.get_radius_from_spreadsheet();
 
   for (let post of posts) {
 
     var dist = Helpers.calcDistMi(phone_location.lat, phone_location.lon, post.lat, post.lon)
-    if(dist <= config.phonetracker.milesRadius) {
+    if(dist <= phonetracker_radius) {
 
       // post is nearby ..
       log(`${post.sc}... ${dist} mi away. Is it new?...`);
