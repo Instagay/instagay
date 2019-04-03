@@ -40,7 +40,23 @@ Helpers.get_tags_from_spreadsheet = () => {
     request
      .get((config.tags_spreadsheet_url), function (error, response, body) {
           if(response.statusCode == 200) {
-            resolve(body.split(/\r?\n/)); // Print the HTML for the Google homepage.
+            var res = body.split(/\r?\n/);
+            resolve(res.slice(1)); // ignore header
+          } else {
+            reject();
+          }
+    });
+  });
+}
+
+
+Helpers.get_radius_from_spreadsheet = () => {
+  return new Promise((resolve, reject) => {
+    request
+     .get((config.radius_spreadsheet_url), function (error, response, body) {
+          if(response.statusCode == 200) {
+            var res = body.split(/\r?\n/);
+            resolve(parseFloat(res[1])); 
           } else {
             reject();
           }
