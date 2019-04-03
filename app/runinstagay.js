@@ -41,10 +41,15 @@ var run_for_one_hashtag =  async () => {
 
   log(`--- Current location of phone is: ${phone_location.lat}, ${phone_location.lon} as of ${phone_location.tst} (timestamp)`);
 
-  var hashtag = "timessquare";
+  log(`--- Finding all tags..and getting a random one...`)
+  var allhashtags = await Helpers.get_tags_from_spreadsheet();
+  var hashtag = _.sample(allhashtags);
+  console.log("hashtag : " + hashtag)
 
+  /*
   log(`--- Finding oldest tag.....`)
   var hashtag = await database.find_oldest_tag();
+  */
 
   log("--- Connecting to Slack and Database worked.")
   log(`Now running Instapuppet scraper with #${hashtag}. This might take up to 5 minutes.`);

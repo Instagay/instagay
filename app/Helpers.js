@@ -1,3 +1,6 @@
+const config = require('./config/config');
+var request=require('request');
+
 var Helpers = {};
 
 Helpers.log  = (indentlevel, msg) => {
@@ -31,6 +34,19 @@ Helpers.calcDist = (lat1, lon1, lat2, lon2) => {
 	return d;
 }
 
+
+Helpers.get_tags_from_spreadsheet = () => {
+  return new Promise((resolve, reject) => {
+    request
+     .get((config.tags_spreadsheet_url), function (error, response, body) {
+          if(response.statusCode == 200) {
+            resolve(body.split(/\r?\n/)); // Print the HTML for the Google homepage.
+          } else {
+            reject();
+          }
+    });
+  });
+}
 
 module.exports = Helpers;
 
