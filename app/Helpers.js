@@ -35,10 +35,24 @@ Helpers.calcDist = (lat1, lon1, lat2, lon2) => {
 }
 
 
-Helpers.get_tags_from_spreadsheet = () => {
+Helpers.get_primary_tags_from_spreadsheet = () => {
   return new Promise((resolve, reject) => {
     request
-     .get((config.tags_spreadsheet_url), function (error, response, body) {
+     .get((config.primary_tags_spreadsheet_url), function (error, response, body) {
+          if(response.statusCode == 200) {
+            var res = body.split(/\r?\n/);
+            resolve(res.slice(1)); // ignore header
+          } else {
+            reject();
+          }
+    });
+  });
+}
+
+Helpers.get_location_tags_from_spreadsheet = () => {
+  return new Promise((resolve, reject) => {
+    request
+     .get((config.location_tags_spreadsheet_url), function (error, response, body) {
           if(response.statusCode == 200) {
             var res = body.split(/\r?\n/);
             resolve(res.slice(1)); // ignore header
