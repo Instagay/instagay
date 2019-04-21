@@ -72,7 +72,13 @@ var run_for_one_hashtag =  async () => {
 
   var found_valid_post = false;
 
-  var phonetracker_radius = await Helpers.get_radius_from_spreadsheet();
+  try {
+    var phonetracker_radius = await Helpers.get_radius_from_spreadsheet();
+  } catch(err) {
+    logdevslack(err);
+  }
+
+  log(`--- Our radius for checking is ${phonetracker_radius}`);
 
   for (let post of posts) {
 
