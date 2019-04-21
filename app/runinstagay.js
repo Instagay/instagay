@@ -42,7 +42,7 @@ var run_for_one_hashtag =  async () => {
   log(`--- Current location of phone is: ${phone_location.lat}, ${phone_location.lon} as of ${phone_location.tst} (timestamp)`);
 
   log(`--- Finding all tags..and getting a random one...`)
-  var allhashtags = await Helpers.get_tags_from_spreadsheet();
+  var allhashtags = await Helpers.get_primary_tags_from_spreadsheet();
   var hashtag = _.sample(allhashtags);
   console.log("hashtag : " + hashtag)
 
