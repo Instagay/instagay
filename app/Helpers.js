@@ -82,5 +82,16 @@ Helpers.get_radius_from_spreadsheet = () => {
   });
 }
 
+
+Helpers.do_lists_intersect = (lista, listb) => {
+  return lista.some((e) => { return listb.includes(e); })
+}
+
+Helpers.intersect_arrays = (arr1, arr2) => {
+    return arr1.filter(function(n) {
+    	return arr2.indexOf(n) !== -1;
+    });
+}
+
 module.exports = Helpers;
 

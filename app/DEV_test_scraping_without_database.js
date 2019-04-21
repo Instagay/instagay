@@ -76,7 +76,8 @@ var run_for_one_hashtag =  async () => {
 
   for (let post of posts) {
     console.log(post);
-      var does_match_locationtag = post.hashtags.some((tag) => { return locationhashtags.includes(tag); })
+      var does_match_locationtag = Helpers.do_lists_intersect(post.hashtags, locationhashtags);
+      console.log(Helpers.intersect_arrays(post.hashtags, locationhashtags));
       console.log("does match locationtag??? : " + does_match_locationtag);
 
       posts_too_far.push(post);
