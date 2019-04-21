@@ -113,7 +113,7 @@ Instapuppet.get_post_info = async (args) => {
     var hashtags = [...document.getElementsByTagName("a")].filter((x) => {
         return x.href.match(hashtagpattern) !== null;
     }).map((x) => {
-        return x.href.match(hashtagpattern)[1];
+        return x.href.match(hashtagpattern)[1].trim().toLowerCase();
     });
         
 
@@ -156,7 +156,7 @@ Instapuppet.get_location_coordinates = async (args) => {
 
 
 
-
+// if posts don't have locations, they're still passed through
 Instapuppet.get_posts_with_locations_by_hashtag = async (hashtag) => { 
 
   log(0, "===" + hashtag + "==> Starting Puppeteer/Chromium browser and page...") 
@@ -182,6 +182,7 @@ Instapuppet.get_posts_with_locations_by_hashtag = async (hashtag) => {
 }
 
 
+// if posts don't have locations, they're still passed through
 Instapuppet._get_posts_with_locations_by_hashtag = async (page,hashtag) => { 
 
   const tag_url_base = 'https://www.instagram.com/explore/tags/';
@@ -219,7 +220,7 @@ Instapuppet._get_posts_with_locations_by_hashtag = async (page,hashtag) => {
 
   log(0, "===" + hashtag + "==> Finding most recent posts that have a location...\n");
 
-  var posts_with_locations = []
+  var posts_with_locations = [];
 
   for(const sc of shortcodes) {
     //    for(const sc of shortcodes.slice(0,3)) { // for debugging
@@ -248,14 +249,15 @@ Instapuppet._get_posts_with_locations_by_hashtag = async (page,hashtag) => {
 
         log(0, `lat: ${location_coordinates.lat}, lon: ${location_coordinates.lon}`)
 
-        //console.log("");  console.log(this_post);
         posts_with_locations.push(this_post);
 
         log(0, " Done!. \n");
       }
 
     } else {
-      log(0, " No location.\n");
+      log(0, " No location... but we still save it, in case it has a location hashtag!\n");
+      this_post = {...postinfo}
+      posts_with_locations.push(this_post);
     }
 
     //        await page.screenshot({path: `example_${sc}.png`, fullPage: true});
