@@ -41,6 +41,10 @@ var run_for_one_hashtag =  async () => {
 
   log(`--- Current location of phone is: ${phone_location.lat}, ${phone_location.lon} as of ${phone_location.tst} (timestamp)`);
 
+  var locationhashtags = await Helpers.get_location_tags_from_spreadsheet();
+  log(`--- Current location hashtags are: ${locationhashtags}`);
+
+
   log(`--- Finding all tags..and getting a random one...`)
   var allhashtags = await Helpers.get_primary_tags_from_spreadsheet();
   var hashtag = _.sample(allhashtags);
@@ -82,36 +86,60 @@ var run_for_one_hashtag =  async () => {
 
   for (let post of posts) {
 
-    var dist = Helpers.calcDistMi(phone_location.lat, phone_location.lon, post.lat, post.lon)
-    if(dist <= phonetracker_radius) {
 
-      // post is nearby ..
-      log(`${post.sc}... ${dist} mi away. Is it new?...`);
-      if(await database.have_we_already_found_this_valid_post_before(post) == false) {
+    // POST HAS GEOLOCATION
+    if(post.haslocation) {
+      var dist = Helpers.calcDistMi(phone_location.lat, phone_location.lon, post.lat, post.lon)
+      if(dist <= phonetracker_radius) {
 
-        // only notify current location of phone if true
-        if(found_valid_post == false) {
-          logslack(`--- Current location of phone is: ${phone_location.lat}, ${phone_location.lon} as of ${phone_location.tst} (timestamp).`);
-          log(`To see location: https://www.google.com/maps/place/${phone_location.lat},${phone_location.lon}`);
-          found_valid_post = true;
+        // post is nearby ..
+        log(`${post.sc}... ${dist} mi away. Is it new?...`);
+        if(await database.have_we_already_found_this_valid_post_before(post) == false) {
+
+          // only notify current location of phone if true
+          if(found_valid_post == false) {
+            logslack(`--- Current location of phone is: ${phone_location.lat}, ${phone_location.lon} as of ${phone_location.tst} (timestamp).`);
+            log(`To see location: https://www.google.com/maps/place/${phone_location.lat},${phone_location.lon}`);
+            found_valid_post = true;
+          }
+
+          // IT'S A NEW POST
+          logslack(`   === *New post ${dist} mi away* by *@${post.username}* with *#${post.hashtag}*!
+  *Link*: <${post.url}> *Location*: ${post.locationname}, or <https://www.google.com/maps/place/${post.lat},${post.lon}|${post.lat}, ${post.lon}>`);
+          await database.mark_post_as_found(post);
+          log("   --- Just marked it as new so we won't see it again.");
+        } else {
+
+          // It's an old post.
+          log(`   --- Ah, we have seen this before.`);
         }
-
-        // IT'S A NEW POST
-        logslack(`   === *New post ${dist} mi away* by *@${post.username}* with *#${post.hashtag}*!
-*Link*: <${post.url}> *Location*: ${post.locationname}, or <https://www.google.com/maps/place/${post.lat},${post.lon}|${post.lat}, ${post.lon}>`);
-        await database.mark_post_as_found(post);
-        log("   --- Just marked it as new so we won't see it again.");
       } else {
+        // post is not nearby.
+        log(`${post.sc}... ${dist} mi away. Too far.`);
+        
+        post.dist = dist;
+        posts_too_far.push(post);
 
-        // It's an old post.
-        log(`   --- Ah, we've seen this before.`);
+        continue;  //NOTE: this jumps over posts that are location-tagged correctly but the pinned location may be too far.. etc. the user is in NYC, post is tagged "#NYC" but pinned as being in NOLA.
       }
     } else {
-      // post is not nearby.
-      log(`${post.sc}... ${dist} mi away. Too far.`);
-      
-      post.dist = dist;
-      posts_too_far.push(post);
+    // post doesn't have location but might have a hashtag
+      var does_match_locationtag = Helpers.do_lists_intersect(post.hashtags, locationhashtags);
+      if(does_match_locationtag) {
+        if(await database.have_we_already_found_this_valid_post_before(post) == false) {
+
+          var matchedhashtaglocations = Helpers.intersect_arrays(post.hashtags, locationhashtags).join(", ");
+          // NEW POST by hashtag location!!
+          logslack(`   === *New post* by *@${post.username}* with *#${post.hashtag}* and *${matchedhashtaglocations}*!
+  *Link*: <${post.url}>`);
+          await database.mark_post_as_found(post);
+          log("   --- Just marked it as new so we won't see it again.");
+        } else {
+          // It's an old post.
+          log(`   --- Ah, we have seen this before.`);
+        }
+ 
+      }
 
     }
   }

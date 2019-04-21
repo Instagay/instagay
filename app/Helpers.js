@@ -55,7 +55,11 @@ Helpers.get_location_tags_from_spreadsheet = () => {
      .get((config.location_tags_spreadsheet_url), function (error, response, body) {
           if(response.statusCode == 200) {
             var res = body.split(/\r?\n/);
-            resolve(res.slice(1)); // ignore header
+            var tags = res.slice(1).map((x) => {
+              // ignore header && cleanup
+              return x.trim().toLowerCase(); 
+            });
+            resolve(tags);
           } else {
             reject();
           }
@@ -68,14 +72,25 @@ Helpers.get_radius_from_spreadsheet = () => {
   return new Promise((resolve, reject) => {
     request
      .get((config.radius_spreadsheet_url), function (error, response, body) {
-          if(response.statusCode == 200) {
+         if(response.statusCode == 200) {
             var res = body.split(/\r?\n/);
-            resolve(parseFloat(res[1])); 
+            resolve(parseFloat(res.slice(1))); 
           } else {
             reject();
           }
     });
   });
+}
+
+
+Helpers.do_lists_intersect = (lista, listb) => {
+  return lista.some((e) => { return listb.includes(e); })
+}
+
+Helpers.intersect_arrays = (arr1, arr2) => {
+    return arr1.filter(function(n) {
+    	return arr2.indexOf(n) !== -1;
+    });
 }
 
 module.exports = Helpers;
