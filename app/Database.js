@@ -24,6 +24,7 @@ class Database {
       self.db.owntracks = _db.collection('owntracks')
     } catch(err) {
       console.log(err.stack);
+      Promise.reject(err.stack);
     }
 
   }

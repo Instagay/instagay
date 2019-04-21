@@ -109,7 +109,18 @@ Instapuppet.get_post_info = async (args) => {
     }
 
 
-    var thispost = { "username": username, "posttext": posttext };
+    var hashtagpattern = /\/explore\/tags\/(.*)\//;
+    var hashtags = [...document.getElementsByTagName("a")].filter((x) => {
+        return x.href.match(hashtagpattern) !== null;
+    }).map((x) => {
+        return x.href.match(hashtagpattern)[1];
+    });
+        
+
+
+    // get posttext by. finding
+ 
+    var thispost = { "username": username, "posttext": posttext, "hashtags": hashtags };
     if(maybelocationtag.length > 0) {
       // we have a winner
       thispost = {...thispost, ...{"haslocation": true, "locationhref": maybelocationtag[0].href, "locationname": maybelocationtag[0].innerText }};
@@ -217,6 +228,8 @@ Instapuppet._get_posts_with_locations_by_hashtag = async (page,hashtag) => {
 
     var postinfo = {};
     postinfo = await Instapuppet.get_post_info({ "sc": sc, "hashtag": hashtag, "page": page});
+
+    console.log(postinfo);
 
     if(postinfo.haslocation == true) {
 
