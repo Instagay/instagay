@@ -229,7 +229,6 @@ Instapuppet._get_posts_with_locations_by_hashtag = async (page,hashtag) => {
     var postinfo = {};
     postinfo = await Instapuppet.get_post_info({ "sc": sc, "hashtag": hashtag, "page": page});
 
-    console.log(postinfo);
 
     if(postinfo.haslocation == true) {
 
