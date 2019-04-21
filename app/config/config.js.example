@@ -7,7 +7,6 @@ config.slack.username = "robot";
 config.slack.icon_emoji = ":robot_face:";
 
 config.phonetracker = {};
-config.phonetracker.milesRadius = 50;
 
 config.database = {};
 config.database.host= "hosthost";
@@ -16,7 +15,6 @@ config.database.dbname = "DBNAME";
 config.database.user = "USER"
 config.database.pwd = "ABC123";
 
-config.tags  = ["nyc", "sf", "sunset"];
 
 config.tags_spreadsheet_url = "https://docs.google.com/spreadsheets/ABCDE";
 config.radius_spreadsheet_url = "https://docs.google.com/spreadsheets/ABCDE";
