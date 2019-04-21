@@ -130,7 +130,7 @@ var run_for_one_hashtag =  async () => {
 
           var matchedhashtaglocations = Helpers.intersect_arrays(post.hashtags, locationhashtags).join(", ");
           // NEW POST by hashtag location!!
-          logslack(`   === *New post* by *@${post.username}* with *#${post.hashtag}* and *${matchedhashtaglocations}*!
+          logslack(`   === *New post* by *@${post.username}* with *#${post.hashtag}* and *#${matchedhashtaglocations}*!
   *Link*: <${post.url}>`);
           await database.mark_post_as_found(post);
           log("   --- Just marked it as new so we won't see it again.");
@@ -139,6 +139,8 @@ var run_for_one_hashtag =  async () => {
           log(`   --- Ah, we have seen this before.`);
         }
  
+      } else {
+        log(`${post.sc}... no hashtags that match our location hashtags.`);
       }
 
     }
