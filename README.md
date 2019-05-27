@@ -3,31 +3,55 @@
 
 ### How This Works
 
-- The server runs a MongoDB server.
-- ~The server app runs an HTTP server that receives locations from OwnTracks~ Use [this repo](https://github.com/dantaeyoung/Owntracks-to-db) to log phone locations to Mongodb
-- The server is a script. Run once, it:
-  - It checks if another instance of it is currently running. If it isn't:
+- [owntracks-to-db](https://github.com/dantaeyoung/Owntracks-to-db) is used to log phone locations and store in a MongoDB dtabase
+
+- When run, `runinstagay.js` does:
   - It retrieves the most recent logged phone location.
-  - It finds the tag that has been searched the longest ago.
-  - Using that hashtag, it searches Instagram for new photos with the given hashtags. This is done via Puppeteer.
-  - It filters for only the photos with geolocations.
-  - If a photo is within X miles of the location, then it sends a Slack message!
-  - Photos that have already been looked at are logged in the DB so we don't check their location; this reduces the number of Instagram calls we can do.
-  
-- This script is called every minute.
+  - It randomly retrieves a hashtag from the Google Spreadsheet. (e.g. "#lgbt")
+  - Using that hashtag, it searches Instagram for new photos with the given hashtags. This is done via [Puppeteer](https://github.com/GoogleChrome/puppeteer).
+  - A) If a photo has a geolocation tag:.
+    - It checks: is a photo is within X miles of the location AND hasn't been found before?
+        - Then it sends a message to the Slack.
+        - Photos that have already been looked at are logged in the DB so they're never double-reported.
+  - B) If a photo doesn't have a geolocation tag,
+    - The script finds the other hashtags it might have and checks against the Google sheets containing location tags (e.g. "#nola")
+    - It checks: does a photo has both a location tag and the hashtag (e.g. is tagged "#lgbt #nola")?
+        - Then it sends a message to the Slack.
+        - Photos that have already been looked at are logged in the DB so they're never double-reported.
+
+
+
+
+
+app/config/config.js.example
+
 
 ### Setup
 
 Client-side: Owntracks on iOS / Android
 
-- Setup
+- Dependencies
   - Set up MongoDB
   - Install dependencies: `npm install -d`
+  - Set up [owntracks-to-db](https://github.com/dantaeyoung/Owntracks-to-db).
+  
+- Config
+  - Copy `app/config/config.js.example` to `app/config/config.js`, and fill in the missing API keys, etc.
+  
+  
+- Run once
   - Check if it runs: `npm start`
 
-- Run continuously:
+
+
+### Deployment
+
+`PM2` handles the restarting & rerunning of this script.
+
   - Install PM2: `npm install pm2 -g`
   - Set PM2 to run on startup: `pm2 startup`, then run the code that results
   - Use PM2 to start: `pm2 start runinstagay.js --name "instagay" --restart-delay=500 --cron "0 * * * *"`
     - (The cron command just manually restarts runinstagay every hour)
+    - You can have multiple clients running simultaneously by changing the name of the `--name`: e.g. having `instagay1`, `instagay2`, etc.
   - Save what's running on PM2 to run on restart `pm2 save`
+  
