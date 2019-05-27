@@ -28,12 +28,11 @@ app/config/config.js.example
 
 ### Setup
 
-Client-side: Owntracks on iOS / Android
 
 - Dependencies
-  - Set up MongoDB
-  - Install dependencies: `npm install -d`
   - Set up [owntracks-to-db](https://github.com/dantaeyoung/Owntracks-to-db).
+    - In the process, you should set up MongoDB. Use the same database as `owntracks-to-db`.
+  - Install dependencies: `npm install -d`
   
 - Config
   - Copy `app/config/config.js.example` to `app/config/config.js`, and fill in the missing API keys, etc.
