@@ -3,10 +3,10 @@
 
 ### How This Works
 
-- [owntracks-to-db](https://github.com/dantaeyoung/Owntracks-to-db) is used to log phone locations and store in a MongoDB dtabase
+- [owntracks-to-db](https://github.com/dantaeyoung/Owntracks-to-db) is used to log phone locations and store in a MongoDB database
 
 - When run, `runinstagay.js` does:
-  - It retrieves the most recent logged phone location.
+  - It retrieves the most recent logged phone location (from the MongoDB database).
   - It randomly retrieves a hashtag from the Google Spreadsheet. (e.g. "#lgbt")
   - Using that hashtag, it searches Instagram for new photos with the given hashtags. This is done via [Puppeteer](https://github.com/GoogleChrome/puppeteer).
   - A) If a photo has a geolocation tag:.
