@@ -9,15 +9,15 @@
   - It retrieves the most recent logged phone location (from the MongoDB database).
   - It randomly retrieves a hashtag from the Google Spreadsheet. (e.g. "#lgbt")
   - Using that hashtag, it searches Instagram for new photos with the given hashtags. This is done via [Puppeteer](https://github.com/GoogleChrome/puppeteer).
-  - A) If a photo has a geolocation tag:.
-    - It checks: is a photo is within X miles of the location AND hasn't been found before?
-        - Then it sends a message to the Slack.
-        - Photos that have already been looked at are logged in the DB so they're never double-reported.
-  - B) If a photo doesn't have a geolocation tag,
-    - The script finds the other hashtags it might have and checks against the Google sheets containing location tags (e.g. "#nola")
-    - It checks: does a photo has both a location tag and the hashtag (e.g. is tagged "#lgbt #nola")?
-        - Then it sends a message to the Slack.
-        - Photos that have already been looked at are logged in the DB so they're never double-reported.
+    - A) If a photo has a geolocation tag:.
+      - It checks: is a photo is within X miles of the location AND hasn't been found before?
+          - Then it sends a message to the Slack.
+          - Photos that have already been looked at are logged in the DB so they're never double-reported.
+    - B) If a photo doesn't have a geolocation tag,
+      - The script finds the other hashtags it might have and checks against the Google sheets containing location tags (e.g. "#nola")
+      - It checks: does a photo has both a location tag and the hashtag (e.g. is tagged "#lgbt #nola")?
+          - Then it sends a message to the Slack.
+          - Photos that have already been looked at are logged in the DB so they're never double-reported.
 
 
 
